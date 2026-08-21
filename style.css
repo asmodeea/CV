@@ -584,6 +584,7 @@ footer{
   .sec-head {
     flex-direction: column;
     align-items: flex-start;
+    margin-bottom:0px;
   }
 
   .sec-head .file-tag {
@@ -591,6 +592,9 @@ footer{
     align-self: flex-start;
         text-align: left;
   }
+
+  .filter-row{margin-top:10px;}
+  .contact-cols {display: block;}
 }
 
 
