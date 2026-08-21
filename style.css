@@ -589,6 +589,7 @@ footer{
   .sec-head .file-tag {
     margin-top: 8px; /* Ajustează spațiul dintre h2 și tag dacă este nevoie */
     align-self: flex-start;
+        text-align: left;
   }
 }
 
