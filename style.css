@@ -464,59 +464,67 @@ footer{
   }
 }
 
-<section class="services-flat-section">
-  <div class="wrap">
-    <div class="services-flat-grid">
-      
-      <!-- 1. Branding & Identity -->
-      <div class="service-flat-card">
-        <div class="flat-icon-wrap">
-          <svg class="flat-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-          </svg>
-        </div>
-        <h3>Branding &amp; Identity</h3>
-        <p>Crafting unique visual identities, brand guidelines, and cohesive design systems.</p>
-      </div>
+/* --- Flat Services Section --- */
+.services-flat-section {
+  padding: 80px 0;
+  background-color: #ffffff;
+}
 
-      <!-- 2. Motion & Video -->
-      <div class="service-flat-card">
-        <div class="flat-icon-wrap">
-          <svg class="flat-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="23 7 16 12 23 17 23 7"></polygon>
-            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
-          </svg>
-        </div>
-        <h3>Motion &amp; Video</h3>
-        <p>Editing engaging video content and dynamic animations for digital campaigns.</p>
-      </div>
+.services-flat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
 
-      <!-- 3. Online & Digital Ads -->
-      <div class="service-flat-card">
-        <div class="flat-icon-wrap">
-          <svg class="flat-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="3" width="20" height="18" rx="2" ry="2"></rect>
-            <line x1="8" y1="21" x2="16" y2="21"></line>
-            <line x1="12" y1="17" x2="12" y2="21"></line>
-          </svg>
-        </div>
-        <h3>Online &amp; Digital Ads</h3>
-        <p>Designing high-converting web banners, social media assets, and digital graphics.</p>
-      </div>
+@media (max-width: 1024px) {
+  .services-flat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 
-      <!-- 4. Print & Packaging -->
-      <div class="service-flat-card">
-        <div class="flat-icon-wrap">
-          <svg class="flat-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-            <line x1="12" y1="22.08" x2="12" y2="12"></line>
-          </svg>
-        </div>
-        <h3>Print &amp; Packaging</h3>
-        <p>Creating production-ready packaging, catalogs, billboards, and high-quality marketing collateral.</p>
-      </div>
+@media (max-width: 640px) {
+  .services-flat-grid {
+    grid-template-columns: 1fr;
+  }
+}
 
-    </div>
-  </div>
-</section>
+.service-flat-card {
+  background: transparent;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.flat-icon-wrap {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f4f5f7;
+  border-radius: 8px;
+}
+
+.flat-svg {
+  width: 24px;
+  height: 24px;
+  stroke: #111111;
+}
+
+.service-flat-card h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111111;
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+
+.service-flat-card p {
+  font-size: 0.925rem;
+  line-height: 1.5;
+  color: #666666;
+  margin: 0;
+}
