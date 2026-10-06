@@ -488,43 +488,92 @@ footer{
   }
 }
 
-.service-flat-card {
-  background: transparent;
+/* --- Colored Block Services Section (Pantone Style) --- */
+.services-flat-section {
   padding: 0;
+  background-color: #ffffff;
+}
+
+.services-flat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .services-flat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .services-flat-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.service-flat-card {
+  padding: 60px 40px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
+  align-items: center;
+  text-align: center;
+  min-height: 420px;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* Culorile specifice pentru fiecare card inspirate din exemplu */
+.service-flat-card:nth-child(1) {
+  background-color: #31134a; /* Violet închis */
+  color: #ffffff;
+}
+
+.service-flat-card:nth-child(2) {
+  background-color: #7da5ae; /* Albastru-gri / Verde pal */
+  color: #ffffff;
+}
+
+.service-flat-card:nth-child(3) {
+  background-color: #8c7a9b; /* Lila prăfuit */
+  color: #ffffff;
+}
+
+.service-flat-card:nth-child(4) {
+  background-color: #0b586d; /* Verde petrol / Albastru închis */
+  color: #ffffff;
 }
 
 .flat-icon-wrap {
-  width: 48px;
-  height: 48px;
-  margin-bottom: 20px;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f4f5f7;
-  border-radius: 8px;
+  background: transparent;
 }
 
 .flat-svg {
-  width: 24px;
-  height: 24px;
-  stroke: #111111;
+  width: 48px;
+  height: 48px;
+  fill: #ffffff; /* Iconițe abstracte pline cu alb */
 }
 
 .service-flat-card h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #111111;
-  margin-bottom: 10px;
-  letter-spacing: -0.01em;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: 16px;
 }
 
 .service-flat-card p {
-  font-size: 0.925rem;
-  line-height: 1.5;
-  color: #666666;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
   margin: 0;
+  max-width: 280px;
 }
