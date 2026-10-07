@@ -1,227 +1,374 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ana Sărdan — Graphic &amp; Motion Designer</title>
-<meta name="description" content="Ana Sărdan — Graphic &amp; Motion Designer. Portfolio &amp; CV: branding, motion, print, web, 3D.">
-<meta name="theme-color" content="#F3F0F1">
+<meta name="description" content="Ana Sărdan — Graphic &amp; Motion Designer in Bucharest. Social media, banners, print, packaging, motion and web design for small and medium brands.">
+<meta name="theme-color" content="#120E18">
+<meta name="color-scheme" content="dark light">
 <link rel="canonical" href="https://asmodeea.github.io/CV/index-en.html">
 <link rel="alternate" hreflang="ro" href="https://asmodeea.github.io/CV/index.html">
 <link rel="alternate" hreflang="en" href="https://asmodeea.github.io/CV/index-en.html">
 <link rel="alternate" hreflang="x-default" href="https://asmodeea.github.io/CV/index.html">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Ana Sărdan — Graphic &amp; Motion Designer">
-<meta property="og:description" content="Ana Sărdan — Graphic &amp; Motion Designer. Portfolio &amp; CV: branding, motion, print, web, 3D.">
+<meta property="og:description" content="Graphic &amp; Motion Designer in Bucharest. Social media, banners, print, packaging, motion and web design for small and medium brands.">
 <meta property="og:url" content="https://asmodeea.github.io/CV/index-en.html">
 <meta property="og:locale" content="en_US">
+<!-- setează tema înainte de prima afișare, ca să nu „clipească" -->
+<script>
+(function(){
+  var r=document.documentElement, t='dark';
+  try{ t=localStorage.getItem('theme')||'dark'; }catch(e){}
+  r.setAttribute('data-theme', t==='light'?'light':'dark');
+  r.classList.add('js');
+  var m=document.querySelector('meta[name="theme-color"]');
+  if(m) m.setAttribute('content', t==='light'?'#E6DDEB':'#120E18');
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@700&family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<!-- GSAP + ScrollTrigger (animații la scroll). Dacă nu se încarcă, pagina rămâne complet funcțională, fără animații. -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
 <script src="script.js" defer></script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Person", "name": "Ana Sărdan", "jobTitle": "Graphic & Motion Designer", "url": "https://asmodeea.github.io/CV/index-en.html", "address": {"@type": "PostalAddress", "addressLocality": "Bucharest", "addressCountry": "RO"}, "knowsAbout": ["Branding", "Print", "Motion design", "Web design", "3D"]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Person", "name": "Ana Sărdan", "jobTitle": "Graphic & Motion Designer", "url": "https://asmodeea.github.io/CV/index-en.html", "address": {"@type": "PostalAddress", "addressLocality": "Bucharest", "addressCountry": "RO"}, "knowsAbout": ["Social media design", "Banners", "Print", "Packaging", "Motion design", "Web design", "Branding"]}</script>
 </head>
 <body>
 <a class="skip-link" href="#top">Skip to content</a>
 
 <header>
   <div class="wrap nav-row">
-    <a href="#top" class="logo" aria-label="Ana Sărdan"><span class="mark" aria-hidden="true">AS</span>Ana Sărdan</a>
+    <a href="#top" class="logo" aria-label="Ana Sărdan"><span class="mark" aria-hidden="true">AS</span><span class="logo-text">Ana Sărdan</span></a>
     <nav id="navLinks" aria-label="Main navigation">
       <ul>
+        <li><a href="#portfolio">Work</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#process">Process</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#experience">Experience</a></li>
         <li><a href="#skills">Skills</a></li>
-        <li><a href="#portfolio">Portofoliu</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
     </nav>
     <div class="nav-actions">
-      <a href="#contact" class="nav-cta">Let's talk</a>
+      <a href="CV_Ana_Sardan.pdf" download="CV_Ana_Sardan.pdf" class="cv-link" aria-label="Download CV (PDF)">CV <span aria-hidden="true">↓</span></a>
+      <button type="button" class="theme-btn" id="themeBtn" aria-label="Switch to light theme" data-label-to-light="Switch to light theme" data-label-to-dark="Switch to dark theme"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor"/></svg></button>
       <a href="index.html" class="lang-btn" hreflang="ro" lang="ro" title="Treci la română" aria-label="Treci la română">RO</a>
     </div>
     <button type="button" class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks" data-label-open="Open menu" data-label-close="Close menu"><span></span><span></span><span></span></button>
   </div>
+  <span class="progress" aria-hidden="true"></span>
 </header>
 
 <main id="top">
 
+  <!-- ============ HERO ============ -->
   <section class="hero">
-    <div class="hero-shapes" aria-hidden="true"><span class="s1"></span><span class="s2"></span><span class="s3"></span><span class="s4"></span><span class="s5"></span><span class="s6"></span><span class="s7"></span></div>
+    <div class="hero-shapes" aria-hidden="true">
+      <span class="s1"><svg class="reticle" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="30"/><circle cx="50" cy="50" r="4"/><path d="M50 0V100M0 50H100"/></svg></span>
+      <span class="s2"></span><span class="s3"></span><span class="s4"></span><span class="s5"></span><span class="s6"></span><span class="s7"></span>
+    </div>
     <div class="wrap hero-grid">
       <div class="hero-copy">
-        <p class="eyebrow"><span class="dot"></span>CLEARED FOR PRINT — PROOF #01</p>
-        <h1>Ana <em>Sărdan</em></h1>
-        <p class="role">GRAPHIC &amp; MOTION DESIGNER — BRANDING · MOTION · PRINT · WEB · 3D</p>
-        <p class="lead">End-to-end responsible for the image of any brand that needs a poster, a banner, a video or a web page — 10 years of bringing ideas from head to paper or screen.</p>
-        <div class="btn-row">
-          <a href="#portfolio" class="btn solid">View work</a>
-          <a href="CV_Ana_Sardan.pdf" download="CV_Ana_Sardan.pdf" class="btn ghost">Download CV</a>
+        <p class="eyebrow" data-hero><span class="dot"></span>CLEARED FOR PRINT — PROOF #01</p>
+        <h1><span class="w">Ana</span> <em class="w">Sărdan</em></h1>
+        <p class="role" data-hero>Graphic &amp; Motion Designer — Bucharest</p>
+        <p class="lead" data-hero>I'm Ana, a graphic and motion designer from Bucharest. I make the visuals brands need (social posts, banners, packaging, print, video) and I stay with each one until the final file is ready.</p>
+        <div class="btn-row" data-hero>
+          <a href="#portfolio" class="btn solid">View my work</a>
+          <a href="#contact" class="btn ghost">Let's talk</a>
         </div>
       </div>
       <div class="hero-portrait proof-frame">
+        <span class="plate p1" aria-hidden="true"></span>
+        <span class="plate p2" aria-hidden="true"></span>
         <span class="cm tl"></span><span class="cm tr"></span><span class="cm bl"></span><span class="cm br"></span>
-        <img src="https://static.wixstatic.com/media/5b3887_ad8aed6699ea4745b8bc904494f06dc1~mv2.png/v1/crop/x_0,y_22,w_787,h_682/fill/w_539,h_466,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/portret%20alb%20negru.png" width="539" height="466" fetchpriority="high" alt="Portrait of Ana Sărdan, black and white">
+        <div class="portrait-img">
+          <img src="https://static.wixstatic.com/media/5b3887_ad8aed6699ea4745b8bc904494f06dc1~mv2.png/v1/crop/x_0,y_22,w_787,h_682/fill/w_539,h_466,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/portret%20alb%20negru.png" width="539" height="466" fetchpriority="high" alt="Portrait of Ana Sărdan, black and white">
+        </div>
         <div class="stamp"><span class="big">10+</span><span>years of<br>experience</span></div>
       </div>
     </div>
   </section>
-<section class="services-flat-section">
-  <div class="services-flat-grid">
-    
-    <!-- 1. Branding & Identity -->
-    <div class="service-flat-card">
-      <div class="flat-icon-wrap">
-        <svg class="flat-svg" viewBox="0 0 24 24">
-          <path d="M12 2C9.24 2 7 4.24 7 7c0 1.55.7 2.94 1.79 3.89C7.14 11.83 6 13.78 6 16c0 3.31 2.69 6 6 6s6-2.69 6-6c0-2.22-1.14-4.17-2.79-5.11C16.3 9.94 17 8.55 17 7c0-2.76-2.24-5-5-5zm0 2c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14c-2.21 0-4-1.79-4-4 0-1.74 1.13-3.22 2.68-3.79.42.12.85.19 1.32.19s.9-.07 1.32-.19C14.87 10.78 16 12.26 16 14c0 2.21-1.79 4-4 4z"/>
-        </svg>
-      </div>
-      <h3>Branding &amp; Identity</h3>
-      <p>Crafting unique visual identities, brand guidelines, and cohesive design systems.</p>
-    </div>
 
-    <!-- 2. Motion & Video -->
-    <div class="service-flat-card">
-      <div class="flat-icon-wrap">
-        <svg class="flat-svg" viewBox="0 0 24 24">
-          <path d="M4 6c0-1.1.9-2 2-2h12c1.1 0 2 .9 2 2v2H4V6zm0 5h16v7c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2v-7zm6 2v4l4-2-4-2z"/>
-        </svg>
-      </div>
-      <h3>Motion &amp; Video</h3>
-      <p>Editing engaging video content and dynamic animations for digital campaigns.</p>
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <div class="marquee-group"><span>Social media</span><i></i><span>Banners</span><i></i><span>Print</span><i></i><span>Packaging</span><i></i><span>Motion</span><i></i><span>Web</span><i></i></div>
+      <div class="marquee-group"><span>Social media</span><i></i><span>Banners</span><i></i><span>Print</span><i></i><span>Packaging</span><i></i><span>Motion</span><i></i><span>Web</span><i></i></div>
     </div>
-
-    <!-- 3. Online & Digital Ads -->
-    <div class="service-flat-card">
-      <div class="flat-icon-wrap">
-        <svg class="flat-svg" viewBox="0 0 24 24">
-          <path d="M12 2L2 19h20L12 2zm0 3.83L18.17 17H5.83L12 5.83z"/>
-        </svg>
-      </div>
-      <h3>Online &amp; Digital Ads</h3>
-      <p>Designing high-converting web banners, social media assets, and digital graphics.</p>
-    </div>
-
-    <!-- 4. Print & Packaging -->
-    <div class="service-flat-card">
-      <div class="flat-icon-wrap">
-        <svg class="flat-svg" viewBox="0 0 24 24">
-          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
-        </svg>
-      </div>
-      <h3>Print &amp; Packaging</h3>
-      <p>Creating production-ready packaging, catalogs, billboards, and high-quality marketing collateral.</p>
-    </div>
-
   </div>
-</section>
 
+  <!-- ============ PORTOFOLIU ============ -->
+  <section id="portfolio" class="tight" aria-labelledby="port-title">
+    <div class="wrap">
+      <div class="sec-head" data-reveal><h2 id="port-title">Selected work</h2><div class="file-tag">SELECTED FRAMES<br>MORE COMING SOON</div></div>
+      <div class="filter-row" id="filterRow" role="group" aria-label="Portfolio filters" data-reveal>
+        <button type="button" class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" class="filter-btn" data-filter="animation" aria-pressed="false">Motion &amp; Video</button>
+        <button type="button" class="filter-btn" data-filter="digital" aria-pressed="false">Social &amp; Digital</button>
+        <button type="button" class="filter-btn" data-filter="web" aria-pressed="false">Web</button>
+        <button type="button" class="filter-btn" data-filter="print" aria-pressed="false">Print &amp; Branding</button>
+      </div>
+      <!--
+        PHOTO SLOTS: the dashed "is-placeholder" tiles are reserved spots for your photos.
+        To use one, replace the whole <div class="sheet-item is-placeholder ..."> with this block
+        (keep g-tall for a portrait photo, g-wide for a 2:1 landscape, or no class for a small one; data-cat = print | digital | web | animation):
+
+        <button type="button" class="sheet-item g-tall" data-cat="print" data-type="image" aria-label="Open: Title">
+          <span class="frame-no"></span>
+          <span class="media"><img src="images/your-photo.jpg" loading="lazy" alt="Short description"></span>
+          <span class="cap">Title</span>
+        </button>
+      -->
+      <div class="sheet-grid" id="sheetGrid">
+<button type="button" class="sheet-item g-vid" data-cat="animation" data-type="video" data-video="FefZVPBDc_8" aria-label="Play: A short animation, made from start to finish"><span class="frame-no"></span><span class="media"><img src="https://i.ytimg.com/vi/FefZVPBDc_8/hq720.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/FefZVPBDc_8/hqdefault.jpg'" loading="lazy" alt="A short animation, made from start to finish"><span class="play-icon" aria-hidden="true">▶</span></span><span class="cap">A short animation, made from start to finish</span></button>
+<div class="sheet-item is-placeholder g-tall" aria-hidden="true"><span class="slot-label">Photo slot<i>coming soon</i></span></div>
+<div class="sheet-item is-placeholder g-tall" aria-hidden="true"><span class="slot-label">Photo slot<i>coming soon</i></span></div>
+<button type="button" class="sheet-item g-vid" data-cat="digital animation" data-type="video" data-video="-XXAz_rauj4" aria-label="Play: Launching a lemonade that isn't boring"><span class="frame-no"></span><span class="media"><img src="https://i.ytimg.com/vi/-XXAz_rauj4/hq720.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/-XXAz_rauj4/hqdefault.jpg'" loading="lazy" alt="Launching a lemonade that isn't boring"><span class="play-icon" aria-hidden="true">▶</span></span><span class="cap">Launching a lemonade that isn't boring</span></button>
+<button type="button" class="sheet-item g-vid" data-cat="animation" data-type="video" data-video="JadllvkHj0s" aria-label="Play: Motorcycle comparison I edited — and yes, that's me on camera"><span class="frame-no"></span><span class="media"><img src="https://i.ytimg.com/vi/JadllvkHj0s/hq720.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/JadllvkHj0s/hqdefault.jpg'" loading="lazy" alt="Motorcycle comparison I edited — and yes, that's me on camera"><span class="play-icon" aria-hidden="true">▶</span></span><span class="cap">Motorcycle comparison I edited — and yes, that's me on camera</span></button>
+<button type="button" class="sheet-item" data-cat="digital animation" data-type="video" data-video="gpKnEZCfmug" aria-label="Play: A first dentist visit, made friendly"><span class="frame-no"></span><span class="media"><img src="https://i.ytimg.com/vi/gpKnEZCfmug/hq720.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/gpKnEZCfmug/hqdefault.jpg'" loading="lazy" alt="A first dentist visit, made friendly"><span class="play-icon" aria-hidden="true">▶</span></span><span class="cap">A first dentist visit, made friendly</span></button>
+<button type="button" class="sheet-item" data-cat="animation" data-type="video" data-video="OA36bQXrwVA" aria-label="Play: Oral health, explained in motion"><span class="frame-no"></span><span class="media"><img src="https://i.ytimg.com/vi/OA36bQXrwVA/hq720.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/OA36bQXrwVA/hqdefault.jpg'" loading="lazy" alt="Oral health, explained in motion"><span class="play-icon" aria-hidden="true">▶</span></span><span class="cap">Oral health, explained in motion</span></button>
+<button type="button" class="sheet-item" data-cat="digital animation" data-type="video" data-video="CLO45lmSvb8" aria-label="Play: Three ingredients, one simple bar"><span class="frame-no"></span><span class="media"><img src="https://i.ytimg.com/vi/CLO45lmSvb8/hq720.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/CLO45lmSvb8/hqdefault.jpg'" loading="lazy" alt="Three ingredients, one simple bar"><span class="play-icon" aria-hidden="true">▶</span></span><span class="cap">Three ingredients, one simple bar</span></button>
+<button type="button" class="sheet-item" data-cat="digital animation" data-type="video" data-video="1tm3DVcGaJk" aria-label="Play: A dental implant package, explained simply"><span class="frame-no"></span><span class="media"><img src="https://i.ytimg.com/vi/1tm3DVcGaJk/hq720.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/1tm3DVcGaJk/hqdefault.jpg'" loading="lazy" alt="A dental implant package, explained simply"><span class="play-icon" aria-hidden="true">▶</span></span><span class="cap">A dental implant package, explained simply</span></button>
+<div class="sheet-item is-placeholder g-tall" aria-hidden="true"><span class="slot-label">Photo slot<i>coming soon</i></span></div>
+<button type="button" class="sheet-item g-vid is-contain" data-cat="web animation" data-type="video" data-video="KjQ0SqvRe2Q" data-ratio="4/3" aria-label="Play: The website I rebuilt, and how it works"><span class="frame-no"></span><span class="media"><img src="https://i.ytimg.com/vi/KjQ0SqvRe2Q/hq720.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/KjQ0SqvRe2Q/hqdefault.jpg'" loading="lazy" alt="The website I rebuilt, and how it works"><span class="play-icon" aria-hidden="true">▶</span></span><span class="cap">The website I rebuilt, and how it works</span></button>
+<div class="sheet-item is-placeholder g-tall" aria-hidden="true"><span class="slot-label">Photo slot<i>coming soon</i></span></div>
+<button type="button" class="sheet-item" data-cat="digital animation" data-type="video" data-video="KLgoRpugdko" aria-label="Play: A closer look at a dental implant"><span class="frame-no"></span><span class="media"><img src="https://i.ytimg.com/vi/KLgoRpugdko/hq720.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/KLgoRpugdko/hqdefault.jpg'" loading="lazy" alt="A closer look at a dental implant"><span class="play-icon" aria-hidden="true">▶</span></span><span class="cap">A closer look at a dental implant</span></button>
+<button type="button" class="sheet-item" data-cat="digital animation" data-type="video" data-video="ibMfGz2jm8o" aria-label="Play: Safety first: how a clinic looks after you"><span class="frame-no"></span><span class="media"><img src="https://i.ytimg.com/vi/ibMfGz2jm8o/hq720.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/ibMfGz2jm8o/hqdefault.jpg'" loading="lazy" alt="Safety first: how a clinic looks after you"><span class="play-icon" aria-hidden="true">▶</span></span><span class="cap">Safety first: how a clinic looks after you</span></button>
+<button type="button" class="sheet-item" data-cat="digital animation" data-type="video" data-video="oz9U1aZwW8Y" aria-label="Play: A limited-edition smoothie gets its own trailer"><span class="frame-no"></span><span class="media"><img src="https://i.ytimg.com/vi/oz9U1aZwW8Y/hq720.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/oz9U1aZwW8Y/hqdefault.jpg'" loading="lazy" alt="A limited-edition smoothie gets its own trailer"><span class="play-icon" aria-hidden="true">▶</span></span><span class="cap">A limited-edition smoothie gets its own trailer</span></button>
+<button type="button" class="sheet-item" data-cat="digital animation" data-type="video" data-video="5ZFHDYZYFEI" aria-label="Play: Everything you love about the Christmas table"><span class="frame-no"></span><span class="media"><img src="https://i.ytimg.com/vi/5ZFHDYZYFEI/hq720.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/5ZFHDYZYFEI/hqdefault.jpg'" loading="lazy" alt="Everything you love about the Christmas table"><span class="play-icon" aria-hidden="true">▶</span></span><span class="cap">Everything you love about the Christmas table</span></button>
+<button type="button" class="sheet-item g-vid" data-cat="animation" data-type="video" data-video="7RXwq43-vVw" aria-label="Play: A patient's story, in her own words"><span class="frame-no"></span><span class="media"><img src="https://i.ytimg.com/vi/7RXwq43-vVw/hq720.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/7RXwq43-vVw/hqdefault.jpg'" loading="lazy" alt="A patient's story, in her own words"><span class="play-icon" aria-hidden="true">▶</span></span><span class="cap">A patient's story, in her own words</span></button>
+<button type="button" class="sheet-item g-vid" data-cat="digital animation" data-type="video" data-video="gqQ-pcKSOtU" aria-label="Play: Fifteen years of memories in one video"><span class="frame-no"></span><span class="media"><img src="https://i.ytimg.com/vi/gqQ-pcKSOtU/hq720.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/gqQ-pcKSOtU/hqdefault.jpg'" loading="lazy" alt="Fifteen years of memories in one video"><span class="play-icon" aria-hidden="true">▶</span></span><span class="cap">Fifteen years of memories in one video</span></button>
+<div class="sheet-item is-placeholder g-tall" aria-hidden="true"><span class="slot-label">Photo slot<i>coming soon</i></span></div>
+<button type="button" class="sheet-item" data-cat="digital animation" data-type="video" data-video="mBMxAUNSlQI" aria-label="Play: A beetroot smoothie, bright red"><span class="frame-no"></span><span class="media"><img src="https://i.ytimg.com/vi/mBMxAUNSlQI/hq720.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/mBMxAUNSlQI/hqdefault.jpg'" loading="lazy" alt="A beetroot smoothie, bright red"><span class="play-icon" aria-hidden="true">▶</span></span><span class="cap">A beetroot smoothie, bright red</span></button>
+<button type="button" class="sheet-item" data-cat="digital animation" data-type="video" data-video="RvyU4gy-b4o" aria-label="Play: A dragon fruit smoothie to stretch the summer"><span class="frame-no"></span><span class="media"><img src="https://i.ytimg.com/vi/RvyU4gy-b4o/hq720.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/RvyU4gy-b4o/hqdefault.jpg'" loading="lazy" alt="A dragon fruit smoothie to stretch the summer"><span class="play-icon" aria-hidden="true">▶</span></span><span class="cap">A dragon fruit smoothie to stretch the summer</span></button>
+<button type="button" class="sheet-item" data-cat="digital animation" data-type="video" data-video="jdr-2YKvn80" aria-label="Play: Mucenici, a spring tradition on the plate"><span class="frame-no"></span><span class="media"><img src="https://i.ytimg.com/vi/jdr-2YKvn80/hq720.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/jdr-2YKvn80/hqdefault.jpg'" loading="lazy" alt="Mucenici, a spring tradition on the plate"><span class="play-icon" aria-hidden="true">▶</span></span><span class="cap">Mucenici, a spring tradition on the plate</span></button>
+<button type="button" class="sheet-item" data-cat="digital animation" data-type="video" data-video="S2doDNainUg" aria-label="Play: Twelve years of home-style taste"><span class="frame-no"></span><span class="media"><img src="https://i.ytimg.com/vi/S2doDNainUg/hq720.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/S2doDNainUg/hqdefault.jpg'" loading="lazy" alt="Twelve years of home-style taste"><span class="play-icon" aria-hidden="true">▶</span></span><span class="cap">Twelve years of home-style taste</span></button>
+<div class="sheet-item is-placeholder g-tall" aria-hidden="true"><span class="slot-label">Photo slot<i>coming soon</i></span></div>
+<button type="button" class="sheet-item" data-cat="digital animation" data-type="video" data-video="ekiKg8AOwzk" aria-label="Play: What saves us from summer boredom?"><span class="frame-no"></span><span class="media"><img src="https://i.ytimg.com/vi/ekiKg8AOwzk/hq720.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/ekiKg8AOwzk/hqdefault.jpg'" loading="lazy" alt="What saves us from summer boredom?"><span class="play-icon" aria-hidden="true">▶</span></span><span class="cap">What saves us from summer boredom?</span></button>
+<button type="button" class="sheet-item" data-cat="digital animation" data-type="video" data-video="F4mgUEdLgtw" aria-label="Play: Three new shots, three moods"><span class="frame-no"></span><span class="media"><img src="https://i.ytimg.com/vi/F4mgUEdLgtw/hq720.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/F4mgUEdLgtw/hqdefault.jpg'" loading="lazy" alt="Three new shots, three moods"><span class="play-icon" aria-hidden="true">▶</span></span><span class="cap">Three new shots, three moods</span></button>
+<button type="button" class="sheet-item" data-cat="animation" data-type="video" data-video="YhpivU6xMnM" aria-label="Play: A motion piece"><span class="frame-no"></span><span class="media"><img src="https://i.ytimg.com/vi/YhpivU6xMnM/hq720.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/YhpivU6xMnM/hqdefault.jpg'" loading="lazy" alt="A motion piece"><span class="play-icon" aria-hidden="true">▶</span></span><span class="cap">A motion piece</span></button>
+<div class="sheet-item is-placeholder" aria-hidden="true"><span class="slot-label">Photo slot<i>coming soon</i></span></div>
+<div class="sheet-item is-placeholder" aria-hidden="true"><span class="slot-label">Photo slot<i>coming soon</i></span></div>
+<div class="sheet-item is-placeholder" aria-hidden="true"><span class="slot-label">Photo slot<i>coming soon</i></span></div>
+<div class="sheet-item is-placeholder" aria-hidden="true"><span class="slot-label">Photo slot<i>coming soon</i></span></div>
+<div class="sheet-item is-placeholder" aria-hidden="true"><span class="slot-label">Photo slot<i>coming soon</i></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SERVICII ============ -->
+  <section id="services" class="services" aria-labelledby="services-title">
+    <div class="wrap">
+      <div class="sec-head" data-reveal><h2 id="services-title">What I do</h2><div class="file-tag">SERVICES<br>FOR SMALL &amp; MEDIUM BRANDS</div></div>
+    </div>
+    <div class="services-flat-grid">
+
+      <div class="service-flat-card">
+        <div class="flat-icon-wrap">
+          <svg class="flat-svg" viewBox="0 0 24 24" aria-hidden="true">
+            <rect pathLength="1" x="3" y="5" width="18" height="14" rx="2"/>
+            <path pathLength="1" d="M10 9.5v5l4.5-2.5z"/>
+          </svg>
+        </div>
+        <h3>Motion &amp; Video</h3>
+        <p>I cut, color and animate videos, from a quick social teaser to a patient's story. If it moves, I enjoy it.</p>
+      </div>
+
+      <div class="service-flat-card">
+        <div class="flat-icon-wrap">
+          <svg class="flat-svg" viewBox="0 0 24 24" aria-hidden="true">
+            <rect pathLength="1" x="7" y="2.5" width="10" height="19" rx="2"/>
+            <path pathLength="1" d="M10.5 18.5h3"/>
+            <circle pathLength="1" cx="12" cy="10" r="2.6"/>
+          </svg>
+        </div>
+        <h3>Social &amp; Digital</h3>
+        <p>Posts, stories, banners, ads. I make them feel like one brand, not ten different ones. I can design your landing page in Figma too.</p>
+      </div>
+
+      <div class="service-flat-card">
+        <div class="flat-icon-wrap">
+          <svg class="flat-svg" viewBox="0 0 24 24" aria-hidden="true">
+            <path pathLength="1" d="M12 2.5 21 7v10l-9 4.5L3 17V7z"/>
+            <path pathLength="1" d="M3 7l9 4.5L21 7M12 11.5v10"/>
+          </svg>
+        </div>
+        <h3>Print &amp; Packaging</h3>
+        <p>Boxes, catalogs, billboards, flyers. I prepare the files so the printer never calls you with a problem.</p>
+      </div>
+
+      <div class="service-flat-card">
+        <div class="flat-icon-wrap">
+          <svg class="flat-svg" viewBox="0 0 24 24" aria-hidden="true">
+            <path pathLength="1" d="M12 2.5 19 10l-7 11.5L5 10z"/>
+            <path pathLength="1" d="M5 10h14M12 2.5v0M9.5 10 12 21.5 14.5 10"/>
+          </svg>
+        </div>
+        <h3>Branding</h3>
+        <p>I don't have a hundred logos in my portfolio yet, and I won't pretend I do. But I'd love to build a brand from scratch, and I'd take it seriously.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ CUM LUCREZ ============ -->
+  <section id="process" class="process" aria-labelledby="proc-title">
+    <div class="wrap">
+      <div class="sec-head" data-reveal><h2 id="proc-title">How I work</h2><div class="file-tag">FROM BRIEF<br>TO PRINT</div></div>
+      <div class="process-pin">
+        <div class="proc-col">
+          <span class="proc-progress" aria-hidden="true"></span>
+          <ol class="proc-steps">
+            <li class="proc-step"><span class="num">01</span><h3>First, we talk</h3><p>Tell me about your brand, who you want to reach and where the design will end up. I ask a lot of questions. It saves us both time later.</p></li>
+            <li class="proc-step"><span class="num">02</span><h3>Then I sketch</h3><p>A few rough ideas on the table, nothing polished yet. You tell me what feels right and we pick one direction.</p></li>
+            <li class="proc-step"><span class="num">03</span><h3>I design it</h3><p>Now I build it properly: type, color, layout, motion. I make sure it looks like the same brand everywhere it shows up.</p></li>
+            <li class="proc-step"><span class="num">04</span><h3>You review</h3><p>You tell me what to change and I change it. I also check every file for print and for each platform (sizes, colors, bleed), so nothing goes wrong later.</p></li>
+            <li class="proc-step"><span class="num">05</span><h3>Cleared for print</h3><p>The final files land in your inbox, ready to post or send to the printer. Done, stamped, and you're good to go.</p></li>
+          </ol>
+        </div>
+        <div class="sheet-stage proof-frame" aria-hidden="true">
+          <span class="cm tl"></span><span class="cm tr"></span><span class="cm bl"></span><span class="cm br"></span>
+          <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid meet">
+            <g class="guides">
+              <rect class="guide" pathLength="1" x="30" y="30" width="340" height="440"/>
+              <path class="guide" pathLength="1" d="M200 8V492"/>
+              <path class="guide" pathLength="1" d="M8 250H392"/>
+              <circle class="guide" pathLength="1" cx="200" cy="18" r="6"/>
+              <circle class="guide" pathLength="1" cx="200" cy="482" r="6"/>
+            </g>
+            <g class="plate-svg" data-plate="a">
+              <circle class="pa" cx="150" cy="190" r="95"/>
+              <rect class="pa" x="60" y="330" width="140" height="18"/>
+            </g>
+            <g class="plate-svg" data-plate="b">
+              <circle class="pb" cx="245" cy="235" r="95"/>
+              <polygon class="pb" points="300,320 350,405 250,405"/>
+            </g>
+            <g class="plate-svg" data-plate="k">
+              <rect class="pk" x="60" y="60" width="90" height="10"/>
+              <circle class="pk" cx="330" cy="62" r="14"/>
+              <rect class="pk" x="60" y="425" width="180" height="8"/>
+              <rect class="pk" x="60" y="443" width="120" height="8"/>
+            </g>
+          </svg>
+          <div class="proc-stamp">Cleared<br>for print</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DESPRE ============ -->
   <section id="about" aria-labelledby="about-title">
     <div class="wrap">
-      <div class="sec-head"><h2 id="about-title">About me</h2><div class="file-tag">FILE: ABOUT.PDF<br>STATUS: APPROVED</div></div>
+      <div class="sec-head" data-reveal><h2 id="about-title">About me</h2><div class="file-tag">FILE: ABOUT.PDF<br>STATUS: APPROVED</div></div>
+      <p class="statement" id="statement">I like turning a messy brief into <strong>something clear</strong> that people actually remember.</p>
       <div class="about-grid">
         <div class="about-img proof-frame">
           <span class="cm tl"></span><span class="cm tr"></span><span class="cm bl"></span><span class="cm br"></span>
-          <img src="https://static.wixstatic.com/media/5b3887_f1da4993b4b14860936816958740f2b3~mv2.png/v1/fill/w_600,h_535,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/5b3887_f1da4993b4b14860936816958740f2b3~mv2.png" width="600" height="535" loading="lazy" decoding="async" alt="">
-        </div>
-        <div class="about-text">
-          <p><strong>I'm Ana and I've been doing graphic design for over 10 years</strong> — from ads, banners and flyers to photo editing that brings out the best in any campaign.</p>
-          <p>In recent years I've moved more and more toward <strong>motion design and video editing</strong>, but I also know what happens behind a website or a 3D scene — from HTML/CSS to 3DS Max.</p>
-          <p>My marketing background lets me speak the language of social media and digital marketing as fluently as the language of Photoshop.</p>
-          <div class="fact-row">
-            <div class="fact"><div class="num">10+</div><div class="label">years of experience</div></div>
-            <div class="fact"><div class="num">8</div><div class="label">companies</div></div>
-            <div class="fact"><div class="num">16</div><div class="label">tools</div></div>
+          <div class="clip">
+            <img src="https://static.wixstatic.com/media/5b3887_f1da4993b4b14860936816958740f2b3~mv2.png/v1/fill/w_600,h_535,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/5b3887_f1da4993b4b14860936816958740f2b3~mv2.png" width="600" height="535" loading="lazy" decoding="async" alt="">
           </div>
         </div>
+        <div class="about-text">
+          <p data-reveal><strong>I'm Ana, and I've been doing graphic design for over 10 years</strong> — from ads, banners and flyers to photo editing that brings out the best in a campaign.</p>
+          <p data-reveal>Lately I've moved more and more toward <strong>motion design and video editing</strong>, but I also know what happens behind a website or a 3D scene, from HTML/CSS to 3DS Max.</p>
+          <p data-reveal>My marketing background means I speak the language of social media and digital ads as fluently as the language of Photoshop.</p>
+        </div>
       </div>
+      <ul class="facts">
+        <li class="fact">
+          <svg class="fact-icon" viewBox="0 0 24 24" aria-hidden="true"><circle pathLength="1" cx="12" cy="12" r="9"/><path pathLength="1" d="M12 6.5V12l3.5 2"/></svg>
+          <h3>10+ years</h3><p>of designing, in companies and with clients.</p>
+        </li>
+        <li class="fact">
+          <svg class="fact-icon" viewBox="0 0 24 24" aria-hidden="true"><rect pathLength="1" x="3" y="3" width="7.5" height="7.5" rx="1"/><rect pathLength="1" x="13.5" y="3" width="7.5" height="7.5" rx="1"/><rect pathLength="1" x="3" y="13.5" width="7.5" height="7.5" rx="1"/><rect pathLength="1" x="13.5" y="13.5" width="7.5" height="7.5" rx="1"/></svg>
+          <h3>Many industries</h3><p>Dental, retail, real estate, tools, print, mobile games.</p>
+        </li>
+        <li class="fact">
+          <svg class="fact-icon" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M6 9V3h12v6M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2"/><rect pathLength="1" x="6" y="14" width="12" height="7"/></svg>
+          <h3>Print &amp; online</h3><p>From packaging and billboards to social posts and web.</p>
+        </li>
+        <li class="fact">
+          <svg class="fact-icon" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M12 3a9 9 0 1 0 0 18c1.4 0 2-.9 2-1.8 0-1.2-1-1.6-1-2.7 0-1 .8-1.5 1.8-1.5H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle pathLength="1" cx="7.5" cy="11" r="1"/><circle pathLength="1" cx="10.5" cy="7" r="1"/><circle pathLength="1" cx="15" cy="7.5" r="1"/></svg>
+          <h3>Design &amp; motion</h3><p>Static graphics and video, both made by me.</p>
+        </li>
+      </ul>
     </div>
   </section>
 
+  <!-- ============ EXPERIENȚĂ ============ -->
   <section id="experience" class="tight" aria-labelledby="exp-title">
     <div class="wrap">
-      <div class="sec-head"><h2 id="exp-title">Experience</h2><div class="file-tag">ORDER: REVERSE CHRONOLOGICAL</div></div>
+      <div class="sec-head" data-reveal><h2 id="exp-title">Experience</h2><div class="file-tag">ORDER: REVERSE CHRONOLOGICAL</div></div>
       <div class="timeline">
-<div class="job"><div class="date mono">SEP 2022 —<br>PRESENT</div><div><span class="company">Go Manj</span><h3>Graphic Designer</h3><ul><li>I create everything visual: from product packaging to social media, static graphics and video (Premiere/After Effects).</li><li>Web &amp; UX/UI: landing pages and interface elements in Figma, plus direct site edits.</li><li>AI integration for generating and enhancing images when stock photos fall short.</li><li>Operational support: organizing data and brand assets in Excel.</li></ul></div></div>
-<div class="job"><div class="date mono">JAN 2020 —<br>SEP 2022</div><div><span class="company">Dent Estet — Dental clinic group</span><h3>Graphic Designer</h3><ul><li>Landing pages, newsletters and materials for the monthly ad campaigns of all clinics.</li><li>Photo retouching for every image published online or in print — contrast, skin cleanup, object removal.</li><li>Video editing: testimonials, infographics and presentations, from cutting to color grading and text animation.</li><li>Other projects: wall decor, forms, outdoor banners.</li></ul></div></div>
-<div class="job"><div class="date mono">NOV 2019 —<br>OCT 2020</div><div><span class="company">TechBubble — Toy &amp; gadget store</span><h3>Graphic Designer &amp; Social Media Manager</h3><ul><li>Banners for monthly campaigns on the site, social networks and ads.</li><li>Social media account management — daily posts on Facebook, weekly on LinkedIn and Instagram.</li><li>Uploaded new products to the site.</li></ul></div></div>
+<div class="job"><div class="date">SEP 2022 —<br>PRESENT</div><div><span class="company">Go Manj</span><h3>Graphic Designer</h3><ul><li>I create everything visual: from product packaging to social media, static graphics and video (Premiere/After Effects).</li><li>Web &amp; UX/UI: landing pages and interface elements in Figma, plus direct site edits.</li><li>AI integration for generating and enhancing images when stock photos fall short.</li><li>Operational support: organizing data and brand assets in Excel.</li></ul></div></div>
+<div class="job"><div class="date">JAN 2020 —<br>SEP 2022</div><div><span class="company">Dent Estet — Dental clinic group</span><h3>Graphic Designer</h3><ul><li>Landing pages, newsletters and materials for the monthly ad campaigns of all clinics.</li><li>Photo retouching for every image published online or in print — contrast, skin cleanup, object removal.</li><li>Video editing: testimonials, infographics and presentations, from cutting to color grading and text animation.</li><li>Other projects: wall decor, forms, outdoor banners.</li></ul></div></div>
+<div class="job"><div class="date">NOV 2019 —<br>OCT 2020</div><div><span class="company">TechBubble — Toy &amp; gadget store</span><h3>Graphic Designer &amp; Social Media Manager</h3><ul><li>Banners for monthly campaigns on the site, social networks and ads.</li><li>Social media account management — daily posts on Facebook, weekly on LinkedIn and Instagram.</li><li>Uploaded new products to the site.</li></ul></div></div>
 <button type="button" class="more-toggle" id="moreToggle" aria-expanded="false" aria-controls="olderJobs" data-label-show="Show full history (+5 positions)" data-label-hide="Hide older history">Show full history (+5 positions)</button>
-<div id="olderJobs"><!--older-->
-<div class="job job-hidden"><div class="date mono">SEP 2018 —<br>OCT 2019</div><div><span class="company">Nordis Group — Real estate developer</span><h3>Graphic Designer / Marketing Specialist</h3><ul><li>All advertising materials — online, print, indoor/outdoor, mesh banners, brochures, price lists.</li><li>Sourced suppliers, requested quotes, placed orders and followed production and delivery.</li><li>Google &amp; Facebook Ads campaigns and social media management.</li></ul></div></div>
-<div class="job job-hidden minor"><div class="date mono">DEC 2015 —<br>MAY 2018</div><div><span class="company">Aktiv-Power — Power tool manufacturer</span><h3>Graphic Designer</h3><ul><li>Product design — boxes, manuals, labels — and online/offline promotional materials.</li><li>Rebuilt the website in WordPress and uploaded the entire product catalog online.</li></ul></div></div>
-<div class="job job-hidden minor"><div class="date mono">MAY 2015 —<br>DEC 2015</div><div><span class="company">Eurotechnik Media / Germag — Retail</span><h3>Graphic Designer</h3><ul><li>Monthly print and online campaigns: catalogs, window posters, animated banners.</li><li>Photographed products and processed images for the online store (white background).</li></ul></div></div>
-<div class="job job-hidden minor"><div class="date mono">FEB 2015 —<br>MAY 2015</div><div><span class="company">Star Print Services — Print shop</span><h3>Graphic Designer / Web Designer</h3><ul><li>Redesigned the company website.</li><li>Prepared print-ready files and helped with design — business cards, T-shirts, flyers.</li></ul></div></div>
-<div class="job job-hidden minor"><div class="date mono">JUN 2014 —<br>OCT 2014</div><div><span class="company">John Boss Inc. — Mobile games</span><h3>Android/iOS Graphic Designer</h3><ul><li>Drew interfaces and characters for a mobile game studio.</li></ul></div></div>
+<div id="olderJobs">
+<div class="job job-hidden"><div class="date">SEP 2018 —<br>OCT 2019</div><div><span class="company">Nordis Group — Real estate developer</span><h3>Graphic Designer / Marketing Specialist</h3><ul><li>All advertising materials — online, print, indoor/outdoor, mesh banners, brochures, price lists.</li><li>Sourced suppliers, requested quotes, placed orders and followed production and delivery.</li><li>Google &amp; Facebook Ads campaigns and social media management.</li></ul></div></div>
+<div class="job job-hidden minor"><div class="date">DEC 2015 —<br>MAY 2018</div><div><span class="company">Aktiv-Power — Power tool manufacturer</span><h3>Graphic Designer</h3><ul><li>Product design — boxes, manuals, labels — and online/offline promotional materials.</li><li>Rebuilt the website in WordPress and uploaded the entire product catalog online.</li></ul></div></div>
+<div class="job job-hidden minor"><div class="date">MAY 2015 —<br>DEC 2015</div><div><span class="company">Eurotechnik Media / Germag — Retail</span><h3>Graphic Designer</h3><ul><li>Monthly print and online campaigns: catalogs, window posters, animated banners.</li><li>Photographed products and processed images for the online store (white background).</li></ul></div></div>
+<div class="job job-hidden minor"><div class="date">FEB 2015 —<br>MAY 2015</div><div><span class="company">Star Print Services — Print shop</span><h3>Graphic Designer / Web Designer</h3><ul><li>Redesigned the company website.</li><li>Prepared print-ready files and helped with design — business cards, T-shirts, flyers.</li></ul></div></div>
+<div class="job job-hidden minor"><div class="date">JUN 2014 —<br>OCT 2014</div><div><span class="company">John Boss Inc. — Mobile games</span><h3>Android/iOS Graphic Designer</h3><ul><li>Drew interfaces and characters for a mobile game studio.</li></ul></div></div>
 </div>
+      </div>
+      <div class="exp-cv" data-reveal>
+        <a href="CV_Ana_Sardan.pdf" download="CV_Ana_Sardan.pdf" class="cv-link">Download the full CV (PDF) <span aria-hidden="true">↓</span></a>
       </div>
     </div>
   </section>
 
+  <!-- ============ COMPETENȚE ============ -->
   <section id="skills" aria-labelledby="skills-title">
     <div class="wrap">
-      <div class="sec-head"><h2 id="skills-title">Skills</h2><div class="file-tag">COLOR RANGE<br>100% INK COVERAGE = ADVANCED</div></div>
+      <div class="sec-head" data-reveal><h2 id="skills-title">Skills</h2><div class="file-tag">INK COVERAGE<br>100% ADVANCED · 66% INTERMEDIATE · 33% BASIC</div></div>
       <div class="skills-grid">
-        <div class="skill-group adv"><p class="eyebrow"><span class="dot"></span>Advanced</p><ul class="chip-list"><li class="chip">Adobe Illustrator<span class="fill" aria-hidden="true"></span></li><li class="chip">Adobe Photoshop<span class="fill" aria-hidden="true"></span></li><li class="chip">Figma<span class="fill" aria-hidden="true"></span></li><li class="chip">After Effects<span class="fill" aria-hidden="true"></span></li><li class="chip">Premiere Pro<span class="fill" aria-hidden="true"></span></li></ul></div>
-        <div class="skill-group mid"><p class="eyebrow"><span class="dot"></span>Intermediate</p><ul class="chip-list"><li class="chip">HTML / CSS<span class="fill" aria-hidden="true"></span></li><li class="chip">Adobe XD<span class="fill" aria-hidden="true"></span></li><li class="chip">WordPress<span class="fill" aria-hidden="true"></span></li><li class="chip">Adobe InDesign<span class="fill" aria-hidden="true"></span></li><li class="chip">Corel Draw<span class="fill" aria-hidden="true"></span></li><li class="chip">Blender<span class="fill" aria-hidden="true"></span></li><li class="chip">3DS Max<span class="fill" aria-hidden="true"></span></li><li class="chip">Maya<span class="fill" aria-hidden="true"></span></li><li class="chip">Facebook Ads<span class="fill" aria-hidden="true"></span></li><li class="chip">Google Ads<span class="fill" aria-hidden="true"></span></li><li class="chip">Office Suite<span class="fill" aria-hidden="true"></span></li></ul></div>
+        <div class="skill-group adv"><p class="eyebrow"><span class="dot"></span>Advanced</p><ul class="chip-list"><li class="chip">Adobe Illustrator<span class="fill" aria-hidden="true"></span></li><li class="chip">Adobe Photoshop<span class="fill" aria-hidden="true"></span></li><li class="chip">After Effects<span class="fill" aria-hidden="true"></span></li><li class="chip">Premiere Pro<span class="fill" aria-hidden="true"></span></li></ul></div>
+        <div class="skill-group mid"><p class="eyebrow"><span class="dot"></span>Intermediate</p><ul class="chip-list"><li class="chip">Figma<span class="fill" aria-hidden="true"></span></li><li class="chip">Adobe InDesign<span class="fill" aria-hidden="true"></span></li><li class="chip">HTML / CSS<span class="fill" aria-hidden="true"></span></li><li class="chip">WordPress<span class="fill" aria-hidden="true"></span></li><li class="chip">Office Suite<span class="fill" aria-hidden="true"></span></li><li class="chip">AI tools — Claude, ChatGPT, Gemini<span class="fill" aria-hidden="true"></span></li></ul></div>
+        <div class="skill-group low"><p class="eyebrow"><span class="dot"></span>Basic</p><ul class="chip-list"><li class="chip">3DS Max<span class="fill" aria-hidden="true"></span></li><li class="chip">Maya<span class="fill" aria-hidden="true"></span></li><li class="chip">Corel Draw<span class="fill" aria-hidden="true"></span></li><li class="chip">Adobe XD<span class="fill" aria-hidden="true"></span></li><li class="chip">Blender<span class="fill" aria-hidden="true"></span></li><li class="chip">Facebook Ads<span class="fill" aria-hidden="true"></span></li><li class="chip">Google Ads<span class="fill" aria-hidden="true"></span></li></ul></div>
       </div>
       <div class="edu-train">
         <div>
-          <p class="eyebrow eyebrow--spaced"><span class="dot"></span>Education</p>
-          <div class="edu-item"><div class="date">OCT 2013 — SEP 2015</div><h4>Politehnica University of Bucharest</h4><p>Faculty of Aerospace Engineering — Industrial Design and Engineering Graphics · Master's</p></div>
-          <div class="edu-item"><div class="date">OCT 2008 — SEP 2013</div><h4>Politehnica University of Bucharest</h4><p>Faculty of Aerospace Engineering — Aircraft Equipment and Systems · Bachelor's</p></div>
+          <p class="eyebrow eyebrow--spaced" data-reveal><span class="dot"></span>Education</p>
+          <div class="edu-item" data-reveal><div class="date">OCT 2013 — SEP 2015</div><h4>Politehnica University of Bucharest</h4><p>Faculty of Aerospace Engineering — Industrial Design and Engineering Graphics · Master's</p></div>
+          <div class="edu-item" data-reveal><div class="date">OCT 2008 — SEP 2013</div><h4>Politehnica University of Bucharest</h4><p>Faculty of Aerospace Engineering — Aircraft Equipment and Systems · Bachelor's</p></div>
         </div>
         <div>
-          <p class="eyebrow eyebrow--spaced"><span class="dot"></span>Courses</p>
-          <div class="train-item"><div class="date">2019</div><p>ILBAH Workshops — 3DS MAX</p></div>
-          <div class="train-item"><div class="date">2018</div><p>Rezistența Online — Google Ads &amp; Online Marketing Course</p></div>
-          <div class="train-item"><div class="date">2012</div><p>Avantaj Consulting — Graphic Design</p></div>
-          <div class="train-item"><div class="date">2010</div><p>Digital Photography</p></div>
+          <p class="eyebrow eyebrow--spaced" data-reveal><span class="dot"></span>Courses</p>
+          <div class="train-item" data-reveal><div class="date">2019</div><p>ILBAH Workshops — 3DS MAX</p></div>
+          <div class="train-item" data-reveal><div class="date">2018</div><p>Rezistența Online — Google Ads &amp; Online Marketing Course</p></div>
+          <div class="train-item" data-reveal><div class="date">2012</div><p>Avantaj Consulting — Graphic Design</p></div>
+          <div class="train-item" data-reveal><div class="date">2010</div><p>Digital Photography</p></div>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="portfolio" class="tight" aria-labelledby="port-title">
-    <div class="wrap">
-      <div class="sec-head"><h2 id="port-title">Work Sheet</h2><div class="file-tag">SELECTED FRAMES<br>MIXED FORMATS</div></div>
-      <div class="filter-row" id="filterRow" role="group" aria-label="Portfolio filters">
-        <button type="button" class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
-        <button type="button" class="filter-btn" data-filter="print" aria-pressed="false">Print &amp; Branding</button>
-        <button type="button" class="filter-btn" data-filter="digital" aria-pressed="false">Digital &amp; Social</button>
-        <button type="button" class="filter-btn" data-filter="web" aria-pressed="false">Web &amp; UX/UI</button>
-        <button type="button" class="filter-btn" data-filter="animation" aria-pressed="false">Animation</button>
-      </div>
-      <div class="sheet-grid" id="sheetGrid">
-<button type="button" class="sheet-item" data-cat="animation" data-type="video" data-video="XkW6b2gbHpY" aria-label="Play: YouTube animation"><span class="frame-no">01</span><span class="thumb-wrapper"><img src="https://img.youtube.com/vi/XkW6b2gbHpY/hqdefault.jpg" width="480" height="360" loading="lazy" decoding="async" alt="YouTube animation"><span class="play-icon" aria-hidden="true">▶</span></span><span class="cap">YouTube animation</span></button>
-<button type="button" class="sheet-item g-wide" data-cat="print" data-type="image" aria-label="Open: Campaign banner"><span class="frame-no">02</span><img src="https://static.wixstatic.com/media/5b3887_2e85738a7c7a45b9bb97099bebdc3750~mv2.png/v1/fill/w_900,h_400,al_c,q_90,enc_avif,quality_auto/Banner.png" width="900" height="400" loading="lazy" decoding="async" alt="Campaign banner"><span class="cap">Campaign banner</span></button>
-<button type="button" class="sheet-item g-tall" data-cat="digital" data-type="image" aria-label="Open: Mobile interface"><span class="frame-no">03</span><img src="https://static.wixstatic.com/media/5b3887_ee6c770f4f7b42e7be4c1f0b5b85947b~mv2.png/v1/fill/w_400,h_700,al_c,q_90,enc_avif,quality_auto/mobile.png" width="400" height="700" loading="lazy" decoding="async" alt="Mobile interface"><span class="cap">Mobile interface</span></button>
-<button type="button" class="sheet-item" data-cat="web" data-type="image" aria-label="Open: Aviation illustration"><span class="frame-no">04</span><img src="https://static.wixstatic.com/media/5b3887_f4bac97eeece4bc9861f1167c8d1865e~mv2.png/v1/fill/w_500,h_500,al_c,q_90,enc_avif,quality_auto/avion.png" width="500" height="500" loading="lazy" decoding="async" alt="Aviation illustration"><span class="cap">Aviation illustration</span></button>
-<button type="button" class="sheet-item" data-cat="print" data-type="image" aria-label="Open: Product packaging"><span class="frame-no">05</span><img src="https://static.wixstatic.com/media/5b3887_3926c476390c4a6794c0a74d9c6d9c8a~mv2.png/v1/fill/w_500,h_500,al_c,q_90,enc_avif,quality_auto/9-batoane.png" width="500" height="500" loading="lazy" decoding="async" alt="Product packaging"><span class="cap">Product packaging</span></button>
-<button type="button" class="sheet-item g-tall" data-cat="digital" data-type="image" aria-label="Open: Instagram Story"><span class="frame-no">06</span><img src="https://static.wixstatic.com/media/5b3887_17eb2617d7764fb1a5dc7e9dd815f790~mv2.png/v1/fill/w_400,h_700,al_c,q_90,enc_avif,quality_auto/story.png" width="400" height="700" loading="lazy" decoding="async" alt="Instagram Story"><span class="cap">Instagram Story</span></button>
-<button type="button" class="sheet-item g-wide" data-cat="print" data-type="image" aria-label="Open: Outdoor billboard"><span class="frame-no">07</span><img src="https://static.wixstatic.com/media/5b3887_87fbb9097ccf49bbb230261a1645883a~mv2.jpg/v1/fill/w_900,h_400,al_c,q_90,enc_avif,quality_auto/ocb-extindere.jpg" width="900" height="400" loading="lazy" decoding="async" alt="Outdoor billboard"><span class="cap">Outdoor billboard</span></button>
-<button type="button" class="sheet-item" data-cat="print" data-type="image" aria-label="Open: Print ad"><span class="frame-no">08</span><img src="https://static.wixstatic.com/media/5b3887_5a3ff4b3c601419e810ed3f22e317ba8f003.jpg/v1/fill/w_500,h_500,al_c,q_90,enc_avif,quality_auto/print-ad.jpg" width="500" height="500" loading="lazy" decoding="async" alt="Print ad"><span class="cap">Print ad</span></button>
-<button type="button" class="sheet-item g-tall" data-cat="web" data-type="image" aria-label="Open: Web landing page"><span class="frame-no">09</span><img src="https://static.wixstatic.com/media/5b3887_f68304bd12a04b5b9a5f141313a5aef3~mv2.png/v1/fill/w_400,h_700,al_c,q_90,enc_avif,quality_auto/web-1920.png" width="400" height="700" loading="lazy" decoding="async" alt="Web landing page"><span class="cap">Web landing page</span></button>
-<button type="button" class="sheet-item" data-cat="web" data-type="image" aria-label="Open: Product image retouching"><span class="frame-no">10</span><img src="https://static.wixstatic.com/media/5b3887_ebfc73f520914402bc21278e3039881a~mv2.jpg/v1/fill/w_500,h_500,al_c,q_90,enc_avif,quality_auto/bunatati.jpg" width="500" height="500" loading="lazy" decoding="async" alt="Product image retouching"><span class="cap">Product image retouching</span></button>
-<button type="button" class="sheet-item" data-cat="print" data-type="image" aria-label="Open: Print campaign"><span class="frame-no">11</span><img src="https://static.wixstatic.com/media/5b3887_4723490455614e1191933e47a60ad505f003.jpg/v1/fill/w_500,h_500,al_c,q_90,enc_avif,quality_auto/campanie.jpg" width="500" height="500" loading="lazy" decoding="async" alt="Print campaign"><span class="cap">Print campaign</span></button>
       </div>
     </div>
   </section>
 
 </main>
 
+<!-- ============ CONTACT ============ -->
 <div class="contact-wrap" id="contact" role="region" aria-labelledby="contact-title">
+  <span class="contact-reticle" aria-hidden="true"><svg class="reticle" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="30"/><circle cx="50" cy="50" r="4"/><path d="M50 0V100M0 50H100"/></svg></span>
   <div class="wrap contact-inner">
-    <p class="eyebrow"><span class="dot"></span>CLEARED FOR PRINT — SIGNED FOR APPROVAL</p>
-    <h2 id="contact-title">Let's make<br>something beautiful together.</h2>
+    <p class="eyebrow" data-reveal><span class="dot"></span>CLEARED FOR PRINT — SIGNED FOR APPROVAL</p>
+    <h2 id="contact-title" data-reveal>Let's make<br>something beautiful together.</h2>
+    <div class="contact-actions" data-reveal>
+      <a href="mailto:ana.sardan@yahoo.com" class="btn solid">Send an email</a>
+    </div>
     <div class="contact-cols">
       <div>
-        <div class="contact-line"><span class="k mono">Phone</span><a href="tel:+40742465251">+40 742 465 251</a></div>
-        <div class="contact-line"><span class="k mono">Email</span><a href="mailto:ana.sardan@yahoo.com">ana.sardan@yahoo.com</a></div>
+        <div class="contact-line" data-reveal><span class="k">Phone</span><a href="tel:+40742465251">+40 742 465 251</a></div>
+        <div class="contact-line" data-reveal><span class="k">Email</span><a href="mailto:ana.sardan@yahoo.com">ana.sardan@yahoo.com</a></div>
       </div>
       <div>
-        <div class="contact-line"><span class="k mono">City</span><span class="v">Bucharest, Romania</span></div>
-        <div class="contact-line"><span class="k mono">Status</span><span class="v">Available for projects</span></div>
+        <div class="contact-line" data-reveal><span class="k">City</span><span class="v">Bucharest, Romania</span></div>
+        <div class="contact-line" data-reveal><span class="k">Status</span><span class="v">Available for projects</span></div>
       </div>
     </div>
   </div>
