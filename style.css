@@ -48,7 +48,7 @@
 :root,
 html[data-theme="dark"]{
   color-scheme:dark;
-  --bg:#2f2340;
+  --bg:#120E18;
   --bg-alt:#191322;
   --text:#F3F0F1;
   --text-soft:#B8AFC4;
@@ -63,7 +63,7 @@ html[data-theme="dark"]{
   --chip-bg:#211A2B;
   --dots:rgba(243,240,241,.055);
   --header-bg:rgba(18,14,24,.82);
-  --contact-bg:#2e2342;
+  --contact-bg:#0A0710;
   --plate-1:#6E3D8C;
   --plate-2:#0E7A78;
   --cm:#F3F0F1;
@@ -334,8 +334,8 @@ html.js .hero [data-hero]{opacity:0; transform:translateY(18px);}
 .hero-portrait .plate.p1{background:var(--plate-1); transform:translate(16px,16px);}
 .hero-portrait .plate.p2{background:var(--plate-2); transform:translate(-16px,-16px); opacity:.85;}
 /* portretul stă mereu pe un fundal deschis, în ambele teme */
-.portrait-img{position:relative; z-index:1; overflow:hidden; background:var(--paper); isolation:isolate;}
-.portrait-img img{width:100%; filter:grayscale(1) contrast(1.05); mix-blend-mode:multiply;}
+.portrait-img{position:relative; z-index:1; overflow:hidden; background:var(--paper); isolation:isolate; aspect-ratio:787/682;}
+.portrait-img img{display:block; width:100%; height:100%; object-fit:cover; object-position:center top; filter:grayscale(1) contrast(1.05); mix-blend-mode:multiply;}
 .stamp{
   position:absolute; top:-18px; right:-22px; width:120px; height:120px; border-radius:50%; z-index:4;
   border:2px solid var(--accent); color:var(--accent);
@@ -365,18 +365,30 @@ html.js .hero [data-hero]{opacity:0; transform:translateY(18px);}
 @keyframes marquee{to{transform:translateX(-50%);}}
 
 /* ---------- 8. PORTOFOLIU ---------- */
-/* rânduri de înălțime fixă — orice proporții ar avea pozele, object-fit le decupează */
-.sheet-grid{display:grid; grid-template-columns:repeat(4,1fr); grid-auto-rows:150px; grid-auto-flow:dense; gap:14px;}
+/* Planșă de lucru orizontală, ciclică (construită de script.js din #sheetGrid).
+   Fără JS (sau în „Grilă") se vede grila de rânduri justificate. */
+.port{padding-bottom:0;}
+.port-controls{display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; margin-bottom:var(--space-m);}
+.port-controls .filter-row{margin-bottom:0;}
+.view-toggle{display:flex; border:1.4px solid var(--line-strong);}
+.view-toggle button{
+  padding:10px 16px; background:none; border:0; color:var(--text-soft); cursor:pointer;
+  font-family:var(--font-label); font-weight:600; font-size:11.5px; letter-spacing:.1em; text-transform:uppercase;
+  transition:background var(--t-fast), color var(--t-fast);
+}
+.view-toggle button + button{border-left:1.4px solid var(--line-strong);}
+.view-toggle button:hover{color:var(--text);}
+.view-toggle button[aria-pressed="true"]{background:var(--btn-bg); color:var(--btn-text);}
+
+/* tile (comun planșei și grilei) */
 .sheet-item{
-  position:relative; overflow:hidden; display:block; width:100%; height:100%;
-  padding:0; font:inherit; color:inherit; text-align:left; cursor:pointer;
+  position:relative; overflow:hidden; display:block; padding:0; font:inherit; color:inherit; text-align:left; cursor:pointer;
   background:var(--ink); border:1px solid var(--line-strong);
 }
 .sheet-item.filtered-out{display:none !important;}
 .sheet-item .media{position:absolute; inset:0; display:block; overflow:hidden; transition:transform var(--t-slow) ease;}
-/* imaginea e mai înaltă decât cadrul, ca să aibă loc pentru parallax */
-.sheet-item .media img{position:absolute; left:0; top:-10%; width:100%; height:120%; object-fit:cover; opacity:.92; transition:opacity .3s ease;}
-.sheet-item:hover .media{transform:scale(1.05);}
+.sheet-item .media img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top; opacity:.94; transition:opacity .3s ease; -webkit-user-drag:none; user-select:none;}
+.sheet-item:hover .media{transform:scale(1.04);}
 .sheet-item:hover .media img{opacity:1;}
 .sheet-item .frame-no{
   position:absolute; top:8px; left:8px; padding:3px 6px; z-index:2;
@@ -393,12 +405,8 @@ html.js .hero [data-hero]{opacity:0; transform:translateY(18px);}
 .sheet-item:hover .cap,
 .sheet-item:focus-visible .cap{opacity:1; transform:none;}
 @media (hover:none){ .sheet-item .cap{opacity:1; transform:none;} }
-.g-wide{grid-column:span 2;}
-.g-tall{grid-row:span 2;}
-/* video 16:9: 2 coloane × 2 rânduri (≈ raport 16:9, fără decupare) */
-.g-vid{grid-column:span 2; grid-row:span 2;}
-.sheet-item[data-type="video"] .media img{top:0; height:100%;}
 .sheet-item.is-contain .media img{object-fit:contain; background:#000;}
+.sheet-item:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
 
 .play-icon{
   position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
@@ -409,14 +417,59 @@ html.js .hero [data-hero]{opacity:0; transform:translateY(18px);}
 }
 .sheet-item:hover .play-icon{background:var(--accent-solid); transform:translate(-50%,-50%) scale(1.1);}
 
-/* loc rezervat pentru pozele care urmează — se înlocuiește cu blocul-șablon din HTML */
-.sheet-item.is-placeholder{
-  cursor:default; border:1.4px dashed var(--line-strong);
-  background:repeating-linear-gradient(135deg, transparent 0 11px, var(--line) 11px 12px), var(--bg-alt);
-  display:flex; align-items:center; justify-content:center; text-align:center;
+/* --- vedere „Grilă": rânduri justificate, fără decupări mari --- */
+.sheet-grid{--rh:clamp(170px,22vw,260px); display:flex; flex-wrap:wrap; gap:14px; padding-bottom:var(--section-y);}
+.sheet-grid::after{content:""; flex-grow:10;}
+.sheet-grid .sheet-item{height:var(--rh); flex:var(--ar,1.4) 1 calc(var(--ar,1.4) * var(--rh)); min-width:0;}
+
+/* --- vedere „Planșă" --- */
+.port.has-board[data-view="board"] .wrap-grid{display:none;}
+.port.has-board[data-view="grid"] .board-wrap{display:none;}
+.board-wrap{
+  position:relative; height:calc(100vh - 76px); height:calc(100svh - 76px); min-height:520px;
+  display:flex; flex-direction:column; background:var(--bg-alt);
+  border-block:1px solid var(--line-strong);
 }
-.sheet-item.is-placeholder .slot-label{display:flex; flex-direction:column; gap:4px; font-size:10.5px; letter-spacing:.12em; color:var(--text-soft);}
-.sheet-item.is-placeholder .slot-label i{font-style:normal; font-weight:500; letter-spacing:.06em; opacity:.8;}
+.board{
+  position:relative; flex:1; min-height:0; overflow:hidden; overflow:clip;
+  cursor:grab; touch-action:pan-y; -webkit-user-select:none; user-select:none; outline:none;
+}
+.board.is-drag{cursor:grabbing;}
+.board.is-drag .sheet-item{pointer-events:none;}
+.board::before,.board::after{content:""; position:absolute; top:22px; bottom:0; width:clamp(18px,3vw,48px); z-index:4; pointer-events:none;}
+.board::before{left:0; background:linear-gradient(90deg,var(--bg-alt),transparent);}
+.board::after{right:0; background:linear-gradient(270deg,var(--bg-alt),transparent);}
+.board-ruler{
+  position:absolute; top:0; left:0; right:0; height:22px; z-index:3; pointer-events:none;
+  border-bottom:1px solid var(--line); background:
+    linear-gradient(90deg,var(--line-strong) 1px,transparent 1px) var(--rx,0) 100%/96px 12px repeat-x,
+    linear-gradient(90deg,var(--line) 1px,transparent 1px) var(--rx,0) 100%/16px 6px repeat-x;
+}
+.board-lanes{position:absolute; top:22px; left:0; right:0; bottom:0; display:flex; flex-direction:column; justify-content:center; gap:14px; padding:14px 0;}
+.lane{position:relative; flex:none; height:var(--lane-h); overflow:visible;}
+.lane-track{display:flex; width:max-content; will-change:transform; backface-visibility:hidden;}
+.lane-set{display:flex; flex:none; gap:14px; padding-right:14px;}
+.board .sheet-item{flex:none; height:var(--lane-h); width:calc(var(--lane-h) * var(--ar,1.4));}
+.board-lanes{opacity:0; transition:opacity .5s ease;}
+.board.is-ready .board-lanes{opacity:1;}
+.board .cm{position:absolute; width:14px; height:14px; z-index:5; pointer-events:none; border:0 solid var(--accent);}
+.board .cm.tl{top:30px; left:10px; border-top-width:1.5px; border-left-width:1.5px;}
+.board .cm.tr{top:30px; right:10px; border-top-width:1.5px; border-right-width:1.5px;}
+.board .cm.bl{bottom:8px; left:10px; border-bottom-width:1.5px; border-left-width:1.5px;}
+.board .cm.br{bottom:8px; right:10px; border-bottom-width:1.5px; border-right-width:1.5px;}
+.board-bar{
+  flex:none; height:44px; display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:0 var(--gutter); border-top:1px solid var(--line);
+  font-family:var(--font-label); font-weight:600; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-soft);
+}
+.board-count b{color:var(--text); font-weight:600;}
+.board-nav{display:flex; gap:8px;}
+.board-nav button{
+  width:30px; height:30px; border-radius:50%; cursor:pointer; background:none; color:var(--text);
+  border:1.4px solid var(--line-strong); font-size:12px; line-height:1; display:flex; align-items:center; justify-content:center;
+  transition:background var(--t-fast), border-color var(--t-fast);
+}
+.board-nav button:hover{background:var(--btn-bg); border-color:var(--btn-bg); color:var(--btn-text);}
 
 /* ---------- 9. SERVICII ---------- */
 .services{padding-bottom:0;}
@@ -552,9 +605,18 @@ body.lightbox-open{overflow:hidden;}
 .lightbox{display:none; position:fixed; inset:0; z-index:var(--z-lightbox); align-items:center; justify-content:center;}
 .lightbox.active{display:flex;}
 .lightbox-overlay{position:absolute; inset:0; background:rgba(0,0,0,.88); backdrop-filter:blur(5px);}
-.lightbox-content{position:relative; z-index:10; width:90%; max-width:900px;}
+.lightbox-content{position:relative; z-index:10; width:92%; max-width:1100px;}
 .lightbox-close{position:absolute; top:-40px; right:0; background:none; border:none; color:#fff; font-size:35px; cursor:pointer;}
-.lightbox-img{width:100%; max-height:80vh; object-fit:contain; display:block; border-radius:6px;}
+.lb-scroll{max-height:82vh; overflow:auto; border-radius:6px; overscroll-behavior:contain; margin-inline:auto; scrollbar-width:thin;}
+.lightbox-img{display:block; width:auto; max-width:100%; max-height:82vh; margin-inline:auto; object-fit:contain; border-radius:6px;}
+/* pagini lungi (landing pages, roll-up): se derulează în cadru, la lățime completă */
+.lb-scroll.is-tall{background:#fff;}
+.lb-scroll.is-tall .lightbox-img{width:100%; max-height:none; border-radius:0;}
+.lb-pager{display:flex; align-items:center; justify-content:center; gap:8px; margin-top:12px; color:#fff; font-family:var(--font-label); font-weight:600; font-size:11.5px; letter-spacing:.1em; text-transform:uppercase;}
+.lb-dot{width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,.3);}
+.lb-dot.on{background:var(--accent-2);}
+.lb-title{margin-top:10px; text-align:center; color:rgba(255,255,255,.85); font-size:12px; letter-spacing:.08em;}
+.vp{max-width:900px; margin-inline:auto;}
 .lightbox-btn{
   position:absolute; top:50%; transform:translateY(-50%); z-index:15;
   width:45px; height:45px; border-radius:50%; cursor:pointer;
@@ -614,7 +676,7 @@ footer{
   .nav-cta{display:none;}
 }
 
-@media (max-width:1020px){
+@media (max-width:1240px){
   .lightbox-prev{left:10px;}
   .lightbox-next{right:10px;}
 }
@@ -642,10 +704,9 @@ footer{
     border-bottom:1px solid var(--line);
   }
   .job{grid-template-columns:1fr; gap:var(--space-xs);}
-  .sheet-grid{grid-template-columns:repeat(2,1fr); grid-auto-rows:90px;}
-  .g-wide{grid-column:span 2;}
-  .g-wide{grid-row:span 2;}
-  .g-tall{grid-row:span 3;}
+  .sheet-grid{--rh:clamp(120px,34vw,170px); gap:10px;}
+  .board-hint{display:none;}
+  .board-bar{justify-content:space-between;}
   .process-pin{gap:48px; min-height:0; padding:0;}
   .sheet-stage{order:-1; height:auto; width:min(340px,100%);}
   .facts{grid-template-columns:repeat(2,1fr); margin-top:56px;}

@@ -69,16 +69,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ---------- Filtre galerie ---------- */
   const filterBtns = document.querySelectorAll('.filter-btn');
-  const sheetItems = document.querySelectorAll('#sheetGrid .sheet-item');
-  const realItems = Array.from(sheetItems).filter(i => !i.classList.contains('is-placeholder'));
+  const realItems = Array.from(document.querySelectorAll('#sheetGrid .sheet-item'));
+  let onFilter = () => {}; // planșa se reconstruiește la schimbarea filtrului (vezi mai jos)
 
-  // numerotăm automat cadrele reale (locurile pentru poze nu se numără)
+  // numerotăm automat cadrele, în ordinea din HTML
   realItems.forEach((item, n) => {
     const no = item.querySelector('.frame-no');
     if (no) no.textContent = String(n + 1).padStart(2, '0');
   });
 
-  // ascundem filtrele care nu au încă nicio lucrare (ex. Print & Branding până vin pozele)
+  // ascundem filtrele care nu au nicio lucrare
   filterBtns.forEach(btn => {
     const f = btn.dataset.filter;
     if (f !== 'all' && !realItems.some(i => i.dataset.cat.split(' ').includes(f))) btn.hidden = true;
@@ -91,10 +91,10 @@ document.addEventListener('DOMContentLoaded', () => {
         b.setAttribute('aria-pressed', String(on));
       });
       const f = btn.dataset.filter;
-      sheetItems.forEach(item => {
-        const isSlot = item.classList.contains('is-placeholder');
-        item.classList.toggle('filtered-out', f === 'all' ? false : (isSlot || !item.dataset.cat.split(' ').includes(f)));
+      realItems.forEach(item => {
+        item.classList.toggle('filtered-out', f !== 'all' && !item.dataset.cat.split(' ').includes(f));
       });
+      onFilter();
       document.dispatchEvent(new CustomEvent('portfolio:filter'));
     });
   });
@@ -213,32 +213,60 @@ document.addEventListener('DOMContentLoaded', () => {
     }).catch(fail);
   }
 
-  function render(index) {
+  let page = 0;
+  const pagesOf = item => (item.dataset.gallery ? item.dataset.gallery.split(',') : null);
+
+  function render(index, startPage) {
     const items = visibleItems();
     if (!items.length) return;
     current = (index + items.length) % items.length;
     const item = items[current];
     const thumb = item.querySelector('img');
     const label = thumb ? thumb.alt : '';
+    const pages = pagesOf(item);
+    page = pages ? (startPage === 'last' ? pages.length - 1 : Math.min(startPage || 0, pages.length - 1)) : 0;
     destroyPlayer();
     body.replaceChildren();
 
     if (item.dataset.type === 'video') {
       buildVideo(item, label);
-    } else {
-      const big = document.createElement('img');
-      big.className = 'lightbox-img';
-      big.src = item.dataset.full || thumb.currentSrc || thumb.src;
-      big.alt = label;
-      body.appendChild(big);
+      return;
     }
+    const wrap = document.createElement('div');
+    wrap.className = 'lb-scroll' + (item.dataset.tall ? ' is-tall' : '');
+    const big = document.createElement('img');
+    big.className = 'lightbox-img';
+    big.src = pages ? pages[page] : (item.dataset.full || thumb.currentSrc || thumb.src);
+    big.alt = label + (pages ? ' (' + (page + 1) + '/' + pages.length + ')' : '');
+    // imaginile mici se văd la mărimea lor reală, fără mărire
+    if (item.dataset.w) (item.dataset.tall ? wrap : big).style.maxWidth = 'min(100%,' + item.dataset.w + 'px)';
+    wrap.appendChild(big);
+    body.appendChild(wrap);
+    if (pages) {
+      const pg = document.createElement('div');
+      pg.className = 'lb-pager';
+      pg.innerHTML = pages.map((_, i) => '<i class="lb-dot' + (i === page ? ' on' : '') + '"></i>').join('') +
+        '<span>' + (page + 1) + ' / ' + pages.length + '</span>';
+      body.appendChild(pg);
+    }
+  }
+
+  // pași: întâi paginile unei galerii, apoi următoarea lucrare
+  function step(dir) {
+    const item = visibleItems()[current];
+    const pages = item && pagesOf(item);
+    if (pages) {
+      const np = page + dir;
+      if (np >= 0 && np < pages.length) { render(current, np); return; }
+    }
+    render(current + dir, dir < 0 ? 'last' : 0);
   }
 
   function open(item) {
     const index = visibleItems().indexOf(item);
     if (index === -1) return;
     lastFocus = document.activeElement;
-    render(index);
+    render(index, 0);
     lightbox.classList.add('active');
     document.body.classList.add('lightbox-open');
     closeBtn.focus();
@@ -253,8 +281,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   realItems.forEach(item => item.addEventListener('click', () => open(item)));
-  nextBtn.addEventListener('click', e => { e.stopPropagation(); render(current + 1); });
-  prevBtn.addEventListener('click', e => { e.stopPropagation(); render(current - 1); });
+  nextBtn.addEventListener('click', e => { e.stopPropagation(); step(1); });
+  prevBtn.addEventListener('click', e => { e.stopPropagation(); step(-1); });
   closeBtn.addEventListener('click', close);
   overlay.addEventListener('click', close);
 
@@ -269,8 +297,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const pb = lightbox.querySelector('.vp-btn');
       if (pb) { e.preventDefault(); pb.click(); }
     }
-    if (e.key === 'ArrowRight') render(current + 1);
-    if (e.key === 'ArrowLeft') render(current - 1);
+    if (e.key === 'ArrowRight') step(1);
+    if (e.key === 'ArrowLeft') step(-1);
+    const sc = lightbox.querySelector('.lb-scroll');
+    if (sc && ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp'].includes(e.key)) {
+      e.preventDefault();
+      const d = e.key.startsWith('Page') ? sc.clientHeight * 0.85 : 70;
+      sc.scrollBy({ top: /Down/.test(e.key) ? d : -d, behavior: 'smooth' });
+    }
     if (e.key === 'Tab') { // focus rămâne în lightbox
       const f = Array.from(lightbox.querySelectorAll('button, input')).filter(el => el.offsetParent !== null);
       const i = f.indexOf(document.activeElement);
@@ -291,8 +325,244 @@ document.addEventListener('DOMContentLoaded', () => {
     if (startOnBar) return;
     const dx = e.changedTouches[0].clientX - startX;
     const dy = e.changedTouches[0].clientY - startY;
-    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) render(current + (dx < 0 ? 1 : -1));
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) step(dx < 0 ? 1 : -1);
   }, { passive: true });
+
+  /* ---------- Planșa de lucru orizontală, ciclică ----------
+     Lucrările din #sheetGrid (sursa) sunt așezate în 1–3 benzi care se rotesc la infinit.
+     Fără JS rămâne grila; „Grilă" din comutator o arată oricând. */
+  const port = document.getElementById('portfolio');
+  const boardWrap = document.getElementById('boardWrap');
+  const board = document.getElementById('board');
+  const lanesEl = document.getElementById('boardLanes');
+  if (port && boardWrap && board && lanesEl) {
+    const vt = document.getElementById('viewToggle');
+    const curEl = document.getElementById('boardCur');
+    const totEl = document.getElementById('boardTot');
+    const GAP = 14, RULER = 96;
+    const mqMobile = window.matchMedia('(max-width: 900px)');
+    const mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const finePtr = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const pad = n => String(n).padStart(2, '0');
+    const mod = (a, n) => ((a % n) + n) % n;
+
+    let lanes = [], pos = -40, tgt = -40, raf = 0, lastT = 0, drag = null;
+    let pinned = false, hovering = false, inView = false, lastInteract = 0, suppress = false;
+    let built = { n: 0, H: 0, w: 0 };
+
+    const arOf = el => parseFloat(el.style.getPropertyValue('--ar')) || 1.4;
+
+    // pentru puține lucrări (filtre) folosim mai puține benzi, ca să nu se vadă aceleași cadre repetate
+    const laneCount = (avail, count) => Math.max(1, Math.min(3, Math.round(avail / (mqMobile.matches ? 190 : 240)), Math.floor(count / 5)));
+    const laneH = (avail, n) => Math.min(Math.floor((avail - (n - 1) * GAP) / n), 460);
+
+    function build() {
+      lanesEl.replaceChildren();
+      lanes = [];
+      const list = visibleItems();
+      totEl.textContent = pad(realItems.length);
+      if (!list.length || !boardWrap.offsetParent) return;
+      const avail = lanesEl.clientHeight - 28;
+      if (avail < 120) return;
+      const n = laneCount(avail, list.length);
+      const H = laneH(avail, n);
+      const vw = board.clientWidth;
+      built = { n, H, w: vw };
+      board.style.setProperty('--lane-h', H + 'px');
+
+      // fiecare lucrare merge în banda cea mai scurtă → ordinea se citește în zig-zag
+      const groups = Array.from({ length: n }, () => ({ items: [], sum: 0 }));
+      list.forEach(item => {
+        const g = groups.reduce((m, x) => (x.sum < m.sum ? x : m), groups[0]);
+        g.items.push(item);
+        g.sum += arOf(item);
+      });
+
+      groups.forEach(g => {
+        const lane = document.createElement('div');
+        lane.className = 'lane';
+        const track = document.createElement('div');
+        track.className = 'lane-track';
+        const set = document.createElement('div');
+        set.className = 'lane-set';
+        const frames = [], lefts = [];
+        let x = 0;
+        g.items.forEach(item => {
+          const t = item.cloneNode(true);
+          t.dataset.oi = realItems.indexOf(item);
+          t.classList.remove('filtered-out');
+          set.appendChild(t);
+          lefts.push(x);
+          frames.push(parseInt((item.querySelector('.frame-no') || {}).textContent, 10) || 0);
+          x += H * arOf(item) + GAP;
+        });
+        track.appendChild(set);
+        lane.appendChild(track);
+        lanesEl.appendChild(lane);
+        const W = Math.max(x, 1);
+        const copies = Math.max(2, Math.ceil(vw / W) + 1);
+        for (let c = 1; c < copies; c++) {
+          const cl = set.cloneNode(true);
+          cl.setAttribute('aria-hidden', 'true');
+          cl.querySelectorAll('button').forEach(b => b.setAttribute('tabindex', '-1'));
+          track.appendChild(cl);
+        }
+        lanes.push({ track, W, lefts, frames });
+      });
+      paint(true);
+      board.classList.add('is-ready');
+    }
+
+    let lastFrame = -1, lastPaint = NaN;
+    function paint(force) {
+      if (!force && pos === lastPaint) return;
+      lastPaint = pos;
+      for (const L of lanes) L.track.style.transform = 'translate3d(' + (-mod(pos, L.W)).toFixed(2) + 'px,0,0)';
+      board.style.setProperty('--rx', (-mod(pos, RULER)).toFixed(2) + 'px');
+      const L0 = lanes[0];
+      if (L0) {
+        const x = mod(mod(pos, L0.W) + board.clientWidth / 2, L0.W);
+        let i = 0;
+        while (i + 1 < L0.lefts.length && L0.lefts[i + 1] <= x) i++;
+        if (L0.frames[i] !== lastFrame) { lastFrame = L0.frames[i]; curEl.textContent = pad(lastFrame); }
+      }
+    }
+
+    function tick(t) {
+      raf = 0;
+      const dt = Math.min(48, t - lastT || 16);
+      lastT = t;
+      const reduce = mqReduce.matches;
+      if (!drag) {
+        const auto = !reduce && !pinned && !hovering && !isOpen() && t - lastInteract > 2500;
+        if (auto) tgt += 0.014 * dt; // deriva lentă: ~14 px/s
+        pos += (tgt - pos) * Math.min(1, dt * 0.012);
+        if (Math.abs(tgt - pos) < 0.05) pos = tgt;
+      }
+      paint();
+      if (inView && !document.hidden && (!reduce || drag || pos !== tgt)) wake();
+    }
+    function wake() {
+      if (raf || document.hidden) return;
+      if (!inView && !drag && pos === tgt) return;
+      raf = requestAnimationFrame(tick);
+    }
+    const touch = () => { lastInteract = performance.now(); wake(); };
+    const pan = d => { tgt += d; touch(); };
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(es => { inView = es[0].isIntersecting; if (inView) { lastT = performance.now(); wake(); } }, { threshold: 0.05 }).observe(boardWrap);
+    } else { inView = true; }
+    document.addEventListener('visibilitychange', wake);
+
+    /* tragere cu mouse / deget (vertical = scroll normal al paginii) */
+    board.addEventListener('pointerdown', e => {
+      if (e.button > 0) return;
+      drag = { id: e.pointerId, x0: e.clientX, pos0: pos, moved: false, s: [{ t: e.timeStamp, x: e.clientX }] };
+    });
+    board.addEventListener('pointermove', e => {
+      if (!drag || e.pointerId !== drag.id) return;
+      const dx = e.clientX - drag.x0;
+      if (!drag.moved && Math.abs(dx) > 6) {
+        drag.moved = true;
+        board.classList.add('is-drag');
+        try { board.setPointerCapture(e.pointerId); } catch (err) { /* ignorăm */ }
+      }
+      if (!drag.moved) return;
+      pos = tgt = drag.pos0 - dx;
+      drag.s.push({ t: e.timeStamp, x: e.clientX });
+      if (drag.s.length > 8) drag.s.shift();
+      touch();
+    });
+    const endDrag = (e, cancel) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      const d = drag; drag = null;
+      board.classList.remove('is-drag');
+      if (!d.moved) return;
+      suppress = true;
+      setTimeout(() => { suppress = false; }, 0);
+      if (!cancel) {
+        const a = d.s[0], b = d.s[d.s.length - 1];
+        const dtm = b.t - a.t;
+        if (dtm > 0 && e.timeStamp - b.t < 80) tgt = pos - ((b.x - a.x) / dtm) * 260; // inerție
+      }
+      touch();
+    };
+    board.addEventListener('pointerup', e => endDrag(e, false));
+    board.addEventListener('pointercancel', e => endDrag(e, true));
+    board.addEventListener('click', e => {
+      if (suppress) { e.preventDefault(); e.stopPropagation(); return; }
+      const t = e.target.closest('.sheet-item');
+      if (t && realItems[+t.dataset.oi]) open(realItems[+t.dataset.oi]);
+    }, true);
+    board.addEventListener('dragstart', e => e.preventDefault());
+
+    /* scroll orizontal / Shift+rotiță mișcă planșa; scroll-ul vertical rămâne al paginii */
+    board.addEventListener('wheel', e => {
+      const horiz = Math.abs(e.deltaX) > Math.abs(e.deltaY) || e.shiftKey;
+      if (!horiz) return;
+      e.preventDefault();
+      pan(Math.abs(e.deltaX) >= Math.abs(e.deltaY) ? e.deltaX : e.deltaY);
+    }, { passive: false });
+
+    board.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); pan(320); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); pan(-320); }
+    });
+    // la navigarea cu Tab, cadrul focalizat e adus în ecran
+    board.addEventListener('focusin', e => {
+      const t = e.target.closest && e.target.closest('.sheet-item');
+      if (!t) return;
+      const r = t.getBoundingClientRect(), b = board.getBoundingClientRect();
+      if (r.left < b.left + 40) pan(r.left - b.left - 40);
+      else if (r.right > b.right - 40) pan(r.right - b.right + 40);
+    });
+    board.addEventListener('scroll', () => { board.scrollLeft = 0; board.scrollTop = 0; });
+    document.getElementById('boardPrev').addEventListener('click', () => pan(-board.clientWidth * 0.8));
+    document.getElementById('boardNext').addEventListener('click', () => pan(board.clientWidth * 0.8));
+    board.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') hovering = true; });
+    board.addEventListener('pointerleave', () => { hovering = false; touch(); });
+
+    /* filtru nou → planșa se reface din lucrările rămase */
+    onFilter = () => { pos = tgt = -40; build(); wake(); };
+
+    /* comutator Planșă / Grilă */
+    function setView(v) {
+      port.dataset.view = v;
+      if (vt) vt.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === v)));
+      if (v === 'board') { build(); inView = true; wake(); }
+      document.dispatchEvent(new CustomEvent('portfolio:view', { detail: { view: v } }));
+    }
+    if (vt) vt.querySelectorAll('button').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
+
+    let rz = 0;
+    window.addEventListener('resize', () => {
+      clearTimeout(rz);
+      rz = setTimeout(() => {
+        if (port.dataset.view !== 'board') return;
+        const avail = lanesEl.clientHeight - 28;
+        const n = laneCount(avail, visibleItems().length);
+        const H = laneH(avail, n);
+        if (n !== built.n || Math.abs(H - built.H) > 12 || board.clientWidth > built.w * 1.15) build();
+      }, 200);
+    });
+
+    // pornire
+    port.classList.add('has-board');
+    boardWrap.hidden = false;
+    if (vt) vt.hidden = false;
+    port.dataset.view = 'board';
+    build();
+    wake();
+
+    // API pentru modulul de mișcare (fixarea secțiunii la scroll)
+    window.portBoard = {
+      nudge: d => pan(d),
+      setPinned: v => { pinned = v; wake(); },
+      isBoard: () => port.dataset.view === 'board'
+    };
+    document.dispatchEvent(new CustomEvent('portboard:ready'));
+  }
 });
 
 /* ==========================================================
@@ -423,34 +693,39 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* ---------- Portofoliu: apariție + parallax în cadre ---------- */
-  const items = $$('.sheet-item');
-  gsap.set(items, { opacity: 0, y: 40 });
-  ScrollTrigger.batch(items, {
-    start: 'top 92%', once: true,
-    onEnter: batch => gsap.to(batch, {
-      opacity: 1, y: 0, duration: 0.8, stagger: 0.08, ease: 'power3.out', overwrite: true
-    })
-  });
-
-  // imaginea din fiecare cadru alunecă ușor mai lent decât cadrul (are 10% rezervă sus/jos)
-  $$('.sheet-item:not(.is-placeholder):not([data-type="video"])').forEach(item => {
-    const img = $('.media img', item);
-    if (!img) return;
-    gsap.fromTo(img, { yPercent: -7 }, {
-      yPercent: 7, ease: 'none',
-      scrollTrigger: { trigger: item, start: 'top bottom', end: 'bottom top', scrub: true }
+  /* ---------- Portofoliu: planșa se fixează pe ecran și scroll-ul vertical o mișcă lateral ----------
+     (doar pe desktop; pe telefon planșa se trage cu degetul, pagina se derulează normal) */
+  const hookBoard = () => {
+    const B = window.portBoard;
+    const wrap = $('#boardWrap');
+    if (!B || !wrap) return;
+    const mmB = gsap.matchMedia();
+    mmB.add('(min-width: 901px)', () => {
+      let st = null, lastP = 0;
+      const kill = () => { if (st) { st.kill(); st = null; B.setPinned(false); } };
+      const make = () => {
+        kill();
+        if (!B.isBoard()) return;
+        lastP = 0;
+        st = ScrollTrigger.create({
+          trigger: wrap, start: 'top top+=76', end: () => '+=' + Math.round(window.innerHeight * 2.2),
+          pin: true, anticipatePin: 1, invalidateOnRefresh: true, refreshPriority: 2,
+          onUpdate: self => {
+            const d = (self.progress - lastP) * window.innerHeight * 2.9;
+            lastP = self.progress;
+            if (d) B.nudge(d);
+          },
+          onToggle: self => B.setPinned(self.isActive)
+        });
+      };
+      const onView = () => { make(); ScrollTrigger.refresh(); };
+      document.addEventListener('portfolio:view', onView);
+      make();
+      return () => { document.removeEventListener('portfolio:view', onView); kill(); };
     });
-  });
-
-  // la schimbarea filtrului, cadrele rămase reapar rapid (și sunt garantat vizibile)
-  document.addEventListener('portfolio:filter', () => {
-    const visible = items.filter(i => !i.classList.contains('filtered-out'));
-    gsap.fromTo(visible,
-      { opacity: 0, y: 24, scale: 0.97 },
-      { opacity: 1, y: 0, scale: 1, duration: 0.5, stagger: 0.04, ease: 'power3.out', overwrite: true, clearProps: 'transform' });
-    ScrollTrigger.refresh();
-  });
+  };
+  if (window.portBoard) hookBoard();
+  else document.addEventListener('portboard:ready', () => { hookBoard(); ScrollTrigger.refresh(); }, { once: true });
 
   /* ---------- Servicii: cardurile urcă, iconițele se desenează ---------- */
   const svcTrig = { trigger: '.services-flat-grid', start: 'top 85%', once: true };
@@ -610,7 +885,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: true });
     document.documentElement.addEventListener('mouseleave', () => { shown = false; gsap.to(cursor, { opacity: 0, duration: 0.2 }); });
     document.addEventListener('pointerover', e => {
-      cursor.classList.toggle('is-active', !!e.target.closest('a, button, .sheet-item:not(.is-placeholder)'));
+      cursor.classList.toggle('is-active', !!e.target.closest('a, button, .sheet-item'));
     });
   }
 
