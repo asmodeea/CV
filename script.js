@@ -330,8 +330,8 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------- Grilă: buton „Vezi mai multe" ---------- */
   const gridEl = document.getElementById('sheetGrid');
   if (gridEl) {
-    const STEP = 20;
-    let shown = STEP;
+    const step = () => (window.matchMedia('(max-width: 900px)').matches ? 8 : 20);
+   let shown = step();
     const moreWrap = document.createElement('div');
     moreWrap.className = 'grid-more';
     const moreGrid = document.createElement('button');
@@ -348,11 +348,11 @@ document.addEventListener('DOMContentLoaded', () => {
       moreGrid.textContent = (RO ? 'Vezi mai multe' : 'See more') + ' (' + left + ')';
     };
     moreGrid.addEventListener('click', () => {
-      shown += STEP;
+      shown += step();
       applyMore();
       document.dispatchEvent(new CustomEvent('portfolio:more'));
     });
-    document.addEventListener('portfolio:filter', () => { shown = STEP; applyMore(); });
+    document.addEventListener('portfolio:filter', () => { shown = step(); applyMore(); });
     applyMore();
   }
   /* ---------- Planșa de lucru orizontală, ciclică ----------
@@ -524,15 +524,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }, true);
     board.addEventListener('dragstart', e => e.preventDefault());
 
-        /* orice scroll cu mouse-ul deasupra planșei o mișcă lateral (infinit); în afara ei, pagina merge mai departe */
+    /* scroll orizontal (trackpad / Shift+rotiță) mișcă planșa; scroll-ul vertical rămâne mereu al paginii */
     board.addEventListener('wheel', e => {
-      if (e.ctrlKey) return; // pinch-zoom
-      let dx = e.deltaX, dy = e.deltaY;
-      if (e.deltaMode === 1) { dx *= 16; dy *= 16; } else if (e.deltaMode === 2) { dx *= board.clientWidth; dy *= board.clientWidth; }
+      if (e.ctrlKey || Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
       e.preventDefault();
-      const d = Math.abs(dx) > Math.abs(dy) ? dx : dy;
-      pan(Math.max(-260, Math.min(260, d * 1.2))); // plafon: fără salturi la rotițe foarte rapide
+      pan(Math.max(-260, Math.min(260, e.deltaX * 1.2)));
     }, { passive: false });
+
+    /* cât timp planșa e pe ecran, derularea paginii o împinge lateral (fără fixare, fără blocaj) */
+    let lastSY = window.scrollY;
+    window.addEventListener('scroll', () => {
+      const d = window.scrollY - lastSY;
+      lastSY = window.scrollY;
+      if (!d || !inView || port.dataset.view !== 'board' || mqReduce.matches || Math.abs(d) > 400) return;
+      tgt += d * 1.8;
+      wake();
+    }, { passive: true });
 
     board.addEventListener('keydown', e => {
       if (e.key === 'ArrowRight') { e.preventDefault(); pan(320); }
@@ -565,6 +572,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (vt) {
         const dy = vt.getBoundingClientRect().top - y0;
         if (dy) window.scrollTo({ top: window.scrollY + dy, behavior: 'instant' });
+         lastSY = window.scrollY;
       }
       document.dispatchEvent(new CustomEvent('portfolio:view', { detail: { view: v } }));
     }
