@@ -576,11 +576,12 @@ document.addEventListener('DOMContentLoaded', () => {
       port.dataset.view = v;
       if (vt) vt.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === v)));
       if (v === 'board') { build(); inView = true; wake(); }
-      // comutatorul rămâne exact unde era pe ecran (fără salt de pagină)
+// comutatorul rămâne unde era pe ecran; dacă nu era vizibil (erai mai jos în grilă), îl aducem sub antet
       if (vt) {
-        const dy = vt.getBoundingClientRect().top - y0;
-        if (dy) window.scrollTo({ top: window.scrollY + dy, behavior: 'instant' });
-         lastSY = window.scrollY;
+        const want = (y0 > 90 && y0 < window.innerHeight - 160) ? y0 : 120;
+        const dy = vt.getBoundingClientRect().top - want;
+        if (Math.abs(dy) > 1) window.scrollTo({ top: window.scrollY + dy, behavior: 'instant' });
+        lastSY = window.scrollY;
       }
       document.dispatchEvent(new CustomEvent('portfolio:view', { detail: { view: v } }));
     }
