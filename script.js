@@ -752,24 +752,17 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------- Portofoliu: când se schimbă înălțimea secțiunii (filtre, grilă, „Vezi mai multe", imagini),
      recalculăm pozițiile animațiilor de mai jos, ca să nu se suprapună secțiunile ---------- */
     const portSec = $('#portfolio');
-  // recalculare sigură: din poziția de sus a paginii (altfel, dacă ești mai jos de secțiunea fixată, pozițiile ies greșite)
-  const safeRefresh = () => {
-    const y = window.scrollY;
-    root.style.scrollBehavior = 'auto';
-    window.scrollTo(0, 0);
-    ScrollTrigger.refresh();
-    window.scrollTo(0, y);
-    root.style.scrollBehavior = '';
-  };
-  if (portSec && 'ResizeObserver' in window) {
-    let rt = 0, lastH = portSec.offsetHeight;
+// fără secțiuni fixate, o recalculare simplă e suficientă; o amânăm puțin și o facem o singură dată
+  let rfT = 0;
+  const safeRefresh = () => { clearTimeout(rfT); rfT = setTimeout(() => ScrollTrigger.refresh(), 100); };
+  if ('ResizeObserver' in window) {
+    let lastH = document.body.offsetHeight;
     new ResizeObserver(() => {
-      const h = portSec.offsetHeight;
+      const h = document.body.offsetHeight;
       if (Math.abs(h - lastH) < 2) return;
       lastH = h;
-      clearTimeout(rt);
-      rt = setTimeout(safeRefresh, 120);
-    }).observe(portSec);
+      safeRefresh();
+    }).observe(document.body);
   }
   ['portfolio:view', 'portfolio:filter', 'portfolio:more'].forEach(ev =>
     document.addEventListener(ev, () => setTimeout(safeRefresh, 150)));
@@ -791,7 +784,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mm = gsap.matchMedia();
 
     // desktop: secțiunea rămâne fixată, fiecare pas completează foaia
-    mm.add('(min-width: 901px)', () => {
+       mm.add('(min-width: 901px)', () => {
       const N = steps.length;
       const setActive = idx => steps.forEach((s, i) => {
         s.classList.toggle('is-active', i === idx);
@@ -802,8 +795,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const tl = gsap.timeline({
         defaults: { ease: 'none' },
         scrollTrigger: {
-          trigger: pin, start: 'top top+=96', end: () => '+=' + Math.round(window.innerHeight * 2.6),
-          pin: true, scrub: 0.6, anticipatePin: 1, invalidateOnRefresh: true,
+          trigger: pin, start: 'top 55%', end: 'bottom 75%', scrub: 0.6,
           onToggle: self => section.classList.toggle('is-pinned', self.isActive),
           onUpdate: self => setActive(Math.min(N - 1, Math.floor(self.progress * N)))
         }
@@ -816,6 +808,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .fromTo('.proc-stamp', { scale: 2.6, opacity: 0, rotation: -32 }, { scale: 1, opacity: 1, rotation: -8, duration: 0.45, ease: 'power4.in' }, 4.15);
 
       return () => { section.classList.remove('is-pinned'); steps.forEach(s => s.classList.remove('is-active', 'is-done')); };
+   
     });
 
     // mobil: fără pin, elementele apar simplu când ajung în ecran
@@ -938,4 +931,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ---------- Recalculăm pozițiile după încărcarea imaginilor ---------- */
   window.addEventListener('load', () => ScrollTrigger.refresh());
+})();
+/* ---------- Contact: telefonul și emailul apar doar la click (nu stau în HTML, deci boții nu le pot citi) ---------- */
+(() => {
+  const dec = el => { try { return atob(el.dataset.c); } catch (e) { return ''; } };
+  document.querySelectorAll('[data-contact="mail"]').forEach(a => a.addEventListener('click', e => {
+    e.preventDefault();
+    const v = dec(a); if (v) window.location.href = 'mailto:' + v;
+  }));
+  document.querySelectorAll('[data-reveal-contact]').forEach(btn => btn.addEventListener('click', () => {
+    const v = dec(btn); if (!v) return;
+    const a = document.createElement('a');
+    a.href = (btn.dataset.revealContact === 'tel' ? 'tel:' : 'mailto:') + v.replace(/\s/g, '');
+    a.textContent = v;
+    btn.replaceWith(a);
+    a.focus();
+  }));
 })();
