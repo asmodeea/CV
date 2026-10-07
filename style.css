@@ -48,7 +48,7 @@
 :root,
 html[data-theme="dark"]{
   color-scheme:dark;
-  --bg:#493960;
+  --bg:#2f2340;
   --bg-alt:#191322;
   --text:#F3F0F1;
   --text-soft:#B8AFC4;
@@ -63,7 +63,7 @@ html[data-theme="dark"]{
   --chip-bg:#211A2B;
   --dots:rgba(243,240,241,.055);
   --header-bg:rgba(18,14,24,.82);
-  --contact-bg:#645978;
+  --contact-bg:#2e2342;
   --plate-1:#6E3D8C;
   --plate-2:#0E7A78;
   --cm:#F3F0F1;
