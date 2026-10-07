@@ -526,8 +526,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       /* Rotița cu mouse-ul deasupra planșei: planșa se mișcă „normal" (rapid), iar pagina e încetinită.
        Parcurgi planșa treptat și ieși natural din ea, deci nu poți rămâne blocat. */
-    const BOARD_GAIN = 5;   // cât se mișcă planșa la fiecare pixel de rotiță (mai mare = mai repede, mai multe ture)
-    const PAGE_SHARE = 0.3; // cât din rotiță merge în pagină (mai mic = pagina avansează mai încet)
+    const BOARD_GAIN = 2;   // cât se mișcă planșa la fiecare pixel de rotiță (mai mare = mai repede, mai multe ture)
+    const PAGE_SHARE = 0.2; // cât din rotiță merge în pagină (mai mic = pagina avansează mai încet)
     board.addEventListener('wheel', e => {
       if (e.ctrlKey || mqReduce.matches || !finePtr.matches) return;
       let dx = e.deltaX, dy = e.deltaY;
