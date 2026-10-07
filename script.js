@@ -327,7 +327,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const dy = e.changedTouches[0].clientY - startY;
     if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) step(dx < 0 ? 1 : -1);
   }, { passive: true });
-
+  /* ---------- Grilă: buton „Vezi mai multe" ---------- */
+  const gridEl = document.getElementById('sheetGrid');
+  if (gridEl) {
+    const STEP = 20;
+    let shown = STEP;
+    const moreWrap = document.createElement('div');
+    moreWrap.className = 'grid-more';
+    const moreGrid = document.createElement('button');
+    moreGrid.type = 'button';
+    moreGrid.className = 'btn solid';
+    moreWrap.appendChild(moreGrid);
+    gridEl.after(moreWrap);
+    const applyMore = () => {
+      const vis = visibleItems();
+      realItems.forEach(i => i.classList.remove('more-hidden'));
+      vis.forEach((i, n) => { if (n >= shown) i.classList.add('more-hidden'); });
+      const left = Math.max(0, vis.length - shown);
+      moreWrap.hidden = left === 0;
+      moreGrid.textContent = (RO ? 'Vezi mai multe' : 'See more') + ' (' + left + ')';
+    };
+    moreGrid.addEventListener('click', () => {
+      shown += STEP;
+      applyMore();
+      document.dispatchEvent(new CustomEvent('portfolio:more'));
+    });
+    document.addEventListener('portfolio:filter', () => { shown = STEP; applyMore(); });
+    applyMore();
+  }
   /* ---------- Planșa de lucru orizontală, ciclică ----------
      Lucrările din #sheetGrid (sursa) sunt așezate în 1–3 benzi care se rotesc la infinit.
      Fără JS rămâne grila; „Grilă" din comutator o arată oricând. */
@@ -390,7 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
         g.items.forEach(item => {
           const t = item.cloneNode(true);
           t.dataset.oi = realItems.indexOf(item);
-          t.classList.remove('filtered-out');
+         t.classList.remove('filtered-out', 'more-hidden');
           set.appendChild(t);
           lefts.push(x);
           frames.push(parseInt((item.querySelector('.frame-no') || {}).textContent, 10) || 0);
@@ -484,7 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!cancel) {
         const a = d.s[0], b = d.s[d.s.length - 1];
         const dtm = b.t - a.t;
-        if (dtm > 0 && e.timeStamp - b.t < 80) tgt = pos - ((b.x - a.x) / dtm) * 260; // inerție
+        if (dtm > 0 && e.timeStamp - b.t < 80) tgt = pos - Math.max(-1400, Math.min(1400, ((b.x - a.x) / dtm) * 260)); // inerție
       }
       touch();
     };
@@ -497,12 +524,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }, true);
     board.addEventListener('dragstart', e => e.preventDefault());
 
-    /* scroll orizontal / Shift+rotiță mișcă planșa; scroll-ul vertical rămâne al paginii */
+        /* orice scroll cu mouse-ul deasupra planșei o mișcă lateral (infinit); în afara ei, pagina merge mai departe */
     board.addEventListener('wheel', e => {
-      const horiz = Math.abs(e.deltaX) > Math.abs(e.deltaY) || e.shiftKey;
-      if (!horiz) return;
+      if (e.ctrlKey) return; // pinch-zoom
+      let dx = e.deltaX, dy = e.deltaY;
+      if (e.deltaMode === 1) { dx *= 16; dy *= 16; } else if (e.deltaMode === 2) { dx *= board.clientWidth; dy *= board.clientWidth; }
       e.preventDefault();
-      pan(Math.abs(e.deltaX) >= Math.abs(e.deltaY) ? e.deltaX : e.deltaY);
+      const d = Math.abs(dx) > Math.abs(dy) ? dx : dy;
+      pan(Math.max(-260, Math.min(260, d * 1.2))); // plafon: fără salturi la rotițe foarte rapide
     }, { passive: false });
 
     board.addEventListener('keydown', e => {
@@ -528,9 +557,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* comutator Planșă / Grilă */
     function setView(v) {
+      const y0 = vt ? vt.getBoundingClientRect().top : 0;
       port.dataset.view = v;
       if (vt) vt.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === v)));
       if (v === 'board') { build(); inView = true; wake(); }
+      // comutatorul rămâne exact unde era pe ecran (fără salt de pagină)
+      if (vt) {
+        const dy = vt.getBoundingClientRect().top - y0;
+        if (dy) window.scrollTo({ top: window.scrollY + dy, behavior: 'instant' });
+      }
       document.dispatchEvent(new CustomEvent('portfolio:view', { detail: { view: v } }));
     }
     if (vt) vt.querySelectorAll('button').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
@@ -694,46 +729,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-   /* ---------- Portofoliu: planșa se fixează pe ecran și scroll-ul vertical o mișcă lateral ----------
-     (doar pe desktop; pe telefon planșa se trage cu degetul, pagina se derulează normal) */
-  const hookBoard = () => {
-    const B = window.portBoard;
-    const wrap = $('#boardWrap');
-    if (!B || !wrap) return;
-    const mmB = gsap.matchMedia();
-    mmB.add('(min-width: 901px)', () => {
-      let st = null, lastP = 0;
-      const kill = () => { if (st) { st.kill(); st = null; B.setPinned(false); } };
-      // scroll-ul fixat = exact o buclă completă a planșei
-      const dist = () => Math.round(Math.min(window.innerHeight * 4.5, Math.max(window.innerHeight * 1.8, B.period() / 2.4)));
-      const make = () => {
-        kill();
-        if (!B.isBoard()) return;
-        lastP = 0;
-        st = ScrollTrigger.create({
-          trigger: wrap, start: 'top top+=76', end: () => '+=' + dist(),
-          pin: true, anticipatePin: 1, invalidateOnRefresh: true, refreshPriority: 2,
-          onUpdate: self => {
-            const d = (self.progress - lastP) * B.period();
-            lastP = self.progress;
-            if (d) B.nudge(d);
-          },
-          onToggle: self => B.setPinned(self.isActive)
-        });
-      };
-      const onView = () => { make(); ScrollTrigger.refresh(); };
-      document.addEventListener('portfolio:view', onView);
-      document.addEventListener('portfolio:filter', onView);
-      make();
-      return () => {
-        document.removeEventListener('portfolio:view', onView);
-        document.removeEventListener('portfolio:filter', onView);
-        kill();
-      };
-    });
-  };
-  if (window.portBoard) hookBoard();
-  else document.addEventListener('portboard:ready', () => { hookBoard(); ScrollTrigger.refresh(); }, { once: true });
+   /* ---------- Portofoliu: fără fixare; recalculăm pozițiile când se schimbă înălțimea secțiunii ---------- */
+  ['portfolio:view', 'portfolio:filter', 'portfolio:more'].forEach(ev =>
+    document.addEventListener(ev, () => ScrollTrigger.refresh()));
 
   /* ---------- Servicii: cardurile urcă, iconițele se desenează ---------- */
   const svcTrig = { trigger: '.services-flat-grid', start: 'top 85%', once: true };
