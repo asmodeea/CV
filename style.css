@@ -532,7 +532,7 @@ html.js .hero [data-hero]{opacity:0; transform:translateY(18px);}
   background:linear-gradient(var(--accent),var(--accent-2));
   transform-origin:50% 0; transform:scaleY(1);
 }
-.proc-steps{list-style:none; display:flex; flex-direction:column; gap:34px; padding-left:44px;}
+.proc-steps{list-style:none; display:flex; flex-direction:column; gap:max(48px,32vh); padding-left:44px;} /* pașii sunt depărtați: foaia se completează treptat, cât derulezi */
 .proc-step{position:relative; transition:opacity .4s ease;}
 .proc-step::before{
   content:""; position:absolute; left:-44px; top:6px; width:13px; height:13px; border-radius:50%;
@@ -742,6 +742,7 @@ footer{
   .board-hint{display:none;}
   .board-bar{justify-content:space-between;}
   .process-pin{gap:48px; padding:0;}
+  .proc-steps{gap:34px;}
   .sheet-stage{position:relative; top:auto; order:-1; height:auto; width:min(340px,100%);}
   .facts{grid-template-columns:repeat(2,1fr); margin-top:56px;}
   .fact,.fact + .fact{padding:28px 20px 0 0; border-left:none;}
