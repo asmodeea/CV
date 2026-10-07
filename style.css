@@ -418,7 +418,10 @@ html.js .hero [data-hero]{opacity:0; transform:translateY(18px);}
 .sheet-item:hover .play-icon{background:var(--accent-solid); transform:translate(-50%,-50%) scale(1.1);}
 
 /* --- vedere „Grilă": rânduri justificate, fără decupări mari --- */
-.sheet-grid{--rh:clamp(170px,22vw,260px); display:flex; flex-wrap:wrap; gap:14px; padding-bottom:var(--section-y);}
+.sheet-grid{--rh:clamp(170px,22vw,260px); display:flex; flex-wrap:wrap; gap:14px;}
+.wrap-grid{padding-bottom:var(--section-y);}
+.grid-more{display:flex; justify-content:center; margin-top:var(--space-l);}
+.sheet-item.more-hidden{display:none !important;}
 .sheet-grid::after{content:""; flex-grow:10;}
 .sheet-grid .sheet-item{height:var(--rh); flex:var(--ar,1.4) 1 calc(var(--ar,1.4) * var(--rh)); min-width:0;}
 
@@ -426,7 +429,7 @@ html.js .hero [data-hero]{opacity:0; transform:translateY(18px);}
 .port.has-board[data-view="board"] .wrap-grid{display:none;}
 .port.has-board[data-view="grid"] .board-wrap{display:none;}
 .board-wrap{
-  position:relative; height:calc(100vh - 76px); height:calc(100svh - 76px); min-height:520px;
+  position:relative; height:calc(100vh - 76px); height:70vh; height:70svh; min-height:440px; margin-bottom:var(--section-y);
   display:flex; flex-direction:column; background:var(--bg-alt);
   border-block:1px solid var(--line-strong);
 }
