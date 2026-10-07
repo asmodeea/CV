@@ -115,6 +115,104 @@ document.addEventListener('DOMContentLoaded', () => {
   const visibleItems = () => realItems.filter(i => !i.classList.contains('filtered-out'));
   const isOpen = () => lightbox.classList.contains('active');
 
+  /* ---------- Player video propriu: YouTube IFrame API, fără interfața YouTube ---------- */
+  const RO = document.documentElement.lang === 'ro';
+  const TXT = RO
+    ? { toggle: 'Redare / Pauză', seek: 'Progres', fail: 'Videoclipul nu poate fi redat aici.' }
+    : { toggle: 'Play / Pause', seek: 'Progress', fail: "This video can't be played here." };
+  let ytReady = null, player = null, tick = 0;
+
+  function loadYT() {
+    if (window.YT && window.YT.Player) return Promise.resolve();
+    if (ytReady) return ytReady;
+    ytReady = new Promise((resolve, reject) => {
+      const prev = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = () => { if (prev) prev(); resolve(); };
+      const s = document.createElement('script');
+      s.src = 'https://www.youtube.com/iframe_api';
+      s.onerror = () => { ytReady = null; reject(); };
+      document.head.appendChild(s);
+    });
+    return ytReady;
+  }
+
+  function destroyPlayer() {
+    clearInterval(tick); tick = 0;
+    if (player && player.destroy) { try { player.destroy(); } catch (e) { /* ignorăm */ } }
+    player = null;
+  }
+
+  const fmt = s => { s = Math.max(0, Math.floor(s || 0)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+
+  function buildVideo(item, label) {
+    const box = document.createElement('div');
+    box.className = 'vp';
+    box.innerHTML =
+      '<div class="vp-screen" title="' + label.replace(/"/g, '&quot;') + '"><div id="vp-target"></div><p class="vp-msg" hidden></p></div>' +
+      '<div class="vp-bar"><button type="button" class="vp-btn" aria-label="' + TXT.toggle + '"><span class="vp-ico" aria-hidden="true"></span></button>' +
+      '<input class="vp-seek" type="range" min="0" max="1000" value="0" step="1" aria-label="' + TXT.seek + '">' +
+      '<span class="vp-time">0:00</span></div>';
+    const screen = box.querySelector('.vp-screen');
+    const btn = box.querySelector('.vp-btn');
+    const seek = box.querySelector('.vp-seek');
+    const time = box.querySelector('.vp-time');
+    const msg = box.querySelector('.vp-msg');
+    screen.style.paddingBottom = item.dataset.ratio === '4/3' ? '75%' : '56.25%';
+    body.appendChild(box);
+
+    let dragging = false;
+    const setPlaying = p => box.classList.toggle('is-playing', p);
+    const toggle = () => {
+      if (!player || !player.getPlayerState) return;
+      player.getPlayerState() === 1 ? player.pauseVideo() : player.playVideo();
+    };
+    const fail = () => { msg.textContent = TXT.fail; msg.hidden = false; };
+    const paint = (t, d) => {
+      const p = d > 0 ? Math.min(100, t / d * 100) : 0;
+      seek.style.setProperty('--p', p + '%');
+      time.textContent = d > 0 ? fmt(t) + ' / ' + fmt(d) : fmt(t);
+    };
+
+    btn.addEventListener('click', toggle);
+    screen.addEventListener('click', toggle);
+    seek.addEventListener('input', () => {
+      dragging = true;
+      const d = player && player.getDuration ? player.getDuration() : 0;
+      paint(d * seek.value / 1000, d);
+    });
+    seek.addEventListener('change', () => {
+      const d = player && player.getDuration ? player.getDuration() : 0;
+      if (d > 0) player.seekTo(d * seek.value / 1000, true);
+      dragging = false;
+    });
+
+    loadYT().then(() => {
+      if (!box.isConnected) return; // lightbox-ul s-a închis între timp
+      const vars = { autoplay: 1, controls: 0, disablekb: 1, fs: 0, iv_load_policy: 3, modestbranding: 1, rel: 0, playsinline: 1, cc_load_policy: 0 };
+      if (/^https?:$/.test(location.protocol)) vars.origin = location.origin;
+      player = new YT.Player('vp-target', {
+        host: 'https://www.youtube-nocookie.com',
+        videoId: item.dataset.video,
+        playerVars: vars,
+        events: {
+          onReady: e => e.target.playVideo(),
+          onStateChange: e => {
+            const S = YT.PlayerState;
+            if (e.data === S.PLAYING) setPlaying(true);
+            else if (e.data === S.PAUSED || e.data === S.CUED) setPlaying(false);
+            else if (e.data === S.ENDED) { e.target.seekTo(0, true); e.target.pauseVideo(); setPlaying(false); } // ascunde ecranul final YouTube
+          },
+          onError: fail
+        }
+      });
+      tick = setInterval(() => {
+        if (!player || !player.getDuration || dragging) return;
+        const d = player.getDuration(), t = player.getCurrentTime();
+        if (d > 0) { seek.value = Math.round(t / d * 1000); paint(t, d); }
+      }, 250);
+    }).catch(fail);
+  }
+
   function render(index) {
     const items = visibleItems();
     if (!items.length) return;
@@ -122,20 +220,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const item = items[current];
     const thumb = item.querySelector('img');
     const label = thumb ? thumb.alt : '';
+    destroyPlayer();
     body.replaceChildren();
 
     if (item.dataset.type === 'video') {
-      const wrap = document.createElement('div');
-      wrap.className = 'lightbox-video';
-      if (item.dataset.ratio === '4/3') wrap.style.paddingBottom = '75%';
-      const frame = document.createElement('iframe');
-      frame.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(item.dataset.video)}?autoplay=1&modestbranding=1&rel=0`;
-      frame.title = label;
-      frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-      frame.referrerPolicy = 'strict-origin-when-cross-origin';
-      frame.allowFullscreen = true;
-      wrap.appendChild(frame);
-      body.appendChild(wrap);
+      buildVideo(item, label);
     } else {
       const big = document.createElement('img');
       big.className = 'lightbox-img';
@@ -158,6 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function close() {
     lightbox.classList.remove('active');
     document.body.classList.remove('lightbox-open');
+    destroyPlayer();
     body.replaceChildren(); // oprește video-ul
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
@@ -175,10 +265,14 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     if (!isOpen()) return;
+    if (e.key === ' ' && !/^(BUTTON|INPUT)$/.test(document.activeElement.tagName)) {
+      const pb = lightbox.querySelector('.vp-btn');
+      if (pb) { e.preventDefault(); pb.click(); }
+    }
     if (e.key === 'ArrowRight') render(current + 1);
     if (e.key === 'ArrowLeft') render(current - 1);
     if (e.key === 'Tab') { // focus rămâne în lightbox
-      const f = [closeBtn, prevBtn, nextBtn];
+      const f = Array.from(lightbox.querySelectorAll('button, input')).filter(el => el.offsetParent !== null);
       const i = f.indexOf(document.activeElement);
       e.preventDefault();
       f[(i + (e.shiftKey ? f.length - 1 : 1)) % f.length].focus();
@@ -187,11 +281,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* swipe pe touch */
   let startX = 0, startY = 0;
+  let startOnBar = false;
   content.addEventListener('touchstart', e => {
+    startOnBar = !!e.target.closest('.vp-bar');
     startX = e.changedTouches[0].clientX;
     startY = e.changedTouches[0].clientY;
   }, { passive: true });
   content.addEventListener('touchend', e => {
+    if (startOnBar) return;
     const dx = e.changedTouches[0].clientX - startX;
     const dy = e.changedTouches[0].clientY - startY;
     if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) render(current + (dx < 0 ? 1 : -1));
