@@ -555,8 +555,6 @@ body.lightbox-open{overflow:hidden;}
 .lightbox-content{position:relative; z-index:10; width:90%; max-width:900px;}
 .lightbox-close{position:absolute; top:-40px; right:0; background:none; border:none; color:#fff; font-size:35px; cursor:pointer;}
 .lightbox-img{width:100%; max-height:80vh; object-fit:contain; display:block; border-radius:6px;}
-.lightbox-video{position:relative; padding-bottom:56.25%; height:0; border-radius:6px; overflow:hidden;}
-.lightbox-video iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
 .lightbox-btn{
   position:absolute; top:50%; transform:translateY(-50%); z-index:15;
   width:45px; height:45px; border-radius:50%; cursor:pointer;
@@ -695,3 +693,22 @@ footer{
   nav a{font-size:11px; letter-spacing:.05em;}
 }
 
+
+/* ---------- player video propriu (fără interfața YouTube) ---------- */
+.vp{width:100%;}
+.vp-screen{position:relative; height:0; background:#000; border-radius:6px 6px 0 0; overflow:hidden; cursor:pointer;}
+.vp-screen > div,.vp-screen iframe{position:absolute; inset:0; width:100%; height:100%; border:0; pointer-events:none;} /* clickul nu ajunge niciodată în YouTube */
+.vp-msg{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:20px; text-align:center; color:#fff; font-size:14px;}
+.vp-bar{display:flex; align-items:center; gap:14px; padding:10px 14px; background:#0d0a12; border-radius:0 0 6px 6px;}
+.vp-btn{flex:none; width:36px; height:36px; border-radius:50%; border:1.4px solid rgba(255,255,255,.5); background:none; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background var(--t-fast), border-color var(--t-fast);}
+.vp-btn:hover{background:var(--accent-solid); border-color:var(--accent-solid);}
+.vp-ico{width:0; height:0; border-style:solid; border-width:6px 0 6px 10px; border-color:transparent transparent transparent #fff; margin-left:2px;}
+.vp.is-playing .vp-ico{width:10px; height:12px; border:0; margin:0; background:linear-gradient(90deg,#fff 0 35%,transparent 35% 65%,#fff 65%);}
+.vp-seek{--p:0%; flex:1; min-width:0; height:4px; -webkit-appearance:none; appearance:none; border-radius:2px; cursor:pointer; background:linear-gradient(90deg,var(--accent-2) var(--p),rgba(255,255,255,.22) var(--p));}
+.vp-seek::-webkit-slider-thumb{-webkit-appearance:none; width:13px; height:13px; border-radius:50%; background:#fff; border:0;}
+.vp-seek::-moz-range-thumb{width:13px; height:13px; border-radius:50%; background:#fff; border:0;}
+.vp-time{flex:none; min-width:78px; text-align:right; font-family:var(--font-label); font-weight:600; font-size:11.5px; letter-spacing:.04em; color:rgba(255,255,255,.8);}
+
+/* miniatură indisponibilă: cadrul rămâne frumos, cu butonul de play */
+.sheet-item.no-thumb .media{background:linear-gradient(135deg,#2a1840,#0b3b3d);}
+.sheet-item.no-thumb .media img{display:none;}
