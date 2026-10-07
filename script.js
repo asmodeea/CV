@@ -694,9 +694,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* ---------- Portofoliu: planșa se fixează pe ecran și scroll-ul vertical o mișcă lateral ----------
+   /* ---------- Portofoliu: planșa se fixează pe ecran și scroll-ul vertical o mișcă lateral ----------
      (doar pe desktop; pe telefon planșa se trage cu degetul, pagina se derulează normal) */
-        // scroll-ul fixat = exact o buclă completă a planșei
+  const hookBoard = () => {
+    const B = window.portBoard;
+    const wrap = $('#boardWrap');
+    if (!B || !wrap) return;
+    const mmB = gsap.matchMedia();
+    mmB.add('(min-width: 901px)', () => {
+      let st = null, lastP = 0;
+      const kill = () => { if (st) { st.kill(); st = null; B.setPinned(false); } };
+      // scroll-ul fixat = exact o buclă completă a planșei
       const dist = () => Math.round(Math.min(window.innerHeight * 4.5, Math.max(window.innerHeight * 1.8, B.period() / 2.4)));
       const make = () => {
         kill();
@@ -715,9 +723,13 @@ document.addEventListener('DOMContentLoaded', () => {
       };
       const onView = () => { make(); ScrollTrigger.refresh(); };
       document.addEventListener('portfolio:view', onView);
-        document.addEventListener('portfolio:filter', onView);
+      document.addEventListener('portfolio:filter', onView);
       make();
-      return () => { document.removeEventListener('portfolio:view', onView); kill(); };
+      return () => {
+        document.removeEventListener('portfolio:view', onView);
+        document.removeEventListener('portfolio:filter', onView);
+        kill();
+      };
     });
   };
   if (window.portBoard) hookBoard();
