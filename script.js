@@ -559,7 +559,8 @@ document.addEventListener('DOMContentLoaded', () => {
     window.portBoard = {
       nudge: d => pan(d),
       setPinned: v => { pinned = v; wake(); },
-      isBoard: () => port.dataset.view === 'board'
+       isBoard: () => port.dataset.view === 'board',
+      period: () => (lanes[0] ? lanes[0].W : 0)
     };
     document.dispatchEvent(new CustomEvent('portboard:ready'));
   }
@@ -695,23 +696,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ---------- Portofoliu: planșa se fixează pe ecran și scroll-ul vertical o mișcă lateral ----------
      (doar pe desktop; pe telefon planșa se trage cu degetul, pagina se derulează normal) */
-  const hookBoard = () => {
-    const B = window.portBoard;
-    const wrap = $('#boardWrap');
-    if (!B || !wrap) return;
-    const mmB = gsap.matchMedia();
-    mmB.add('(min-width: 901px)', () => {
-      let st = null, lastP = 0;
-      const kill = () => { if (st) { st.kill(); st = null; B.setPinned(false); } };
+        // scroll-ul fixat = exact o buclă completă a planșei
+      const dist = () => Math.round(Math.min(window.innerHeight * 4.5, Math.max(window.innerHeight * 1.8, B.period() / 2.4)));
       const make = () => {
         kill();
         if (!B.isBoard()) return;
         lastP = 0;
         st = ScrollTrigger.create({
-          trigger: wrap, start: 'top top+=76', end: () => '+=' + Math.round(window.innerHeight * 2.2),
+          trigger: wrap, start: 'top top+=76', end: () => '+=' + dist(),
           pin: true, anticipatePin: 1, invalidateOnRefresh: true, refreshPriority: 2,
           onUpdate: self => {
-            const d = (self.progress - lastP) * window.innerHeight * 2.9;
+            const d = (self.progress - lastP) * B.period();
             lastP = self.progress;
             if (d) B.nudge(d);
           },
@@ -720,6 +715,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
       const onView = () => { make(); ScrollTrigger.refresh(); };
       document.addEventListener('portfolio:view', onView);
+        document.addEventListener('portfolio:filter', onView);
       make();
       return () => { document.removeEventListener('portfolio:view', onView); kill(); };
     });
