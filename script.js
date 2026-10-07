@@ -635,7 +635,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   const $ = (s, c) => (c || document).querySelector(s);
   const $$ = (s, c) => gsap.utils.toArray(s, c);
-
+   // `scroll-behavior: smooth` din CSS strică măsurătorile ScrollTrigger (mută pagina animat în timpul recalculării):
+  // îl oprim doar cât durează fiecare recalculare
+  ScrollTrigger.addEventListener('refreshInit', () => { root.style.scrollBehavior = 'auto'; });
+  ScrollTrigger.addEventListener('refresh', () => { root.style.scrollBehavior = ''; });
   /* ---------- Bară de progres la scroll ---------- */
   gsap.to('.progress', {
     scaleX: 1, ease: 'none',
@@ -747,7 +750,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ---------- Portofoliu: când se schimbă înălțimea secțiunii (filtre, grilă, „Vezi mai multe", imagini),
      recalculăm pozițiile animațiilor de mai jos, ca să nu se suprapună secțiunile ---------- */
-  const portSec = $('#portfolio');
+    const portSec = $('#portfolio');
+  // recalculare sigură: din poziția de sus a paginii (altfel, dacă ești mai jos de secțiunea fixată, pozițiile ies greșite)
+  const safeRefresh = () => {
+    const y = window.scrollY;
+    root.style.scrollBehavior = 'auto';
+    window.scrollTo(0, 0);
+    ScrollTrigger.refresh();
+    window.scrollTo(0, y);
+    root.style.scrollBehavior = '';
+  };
   if (portSec && 'ResizeObserver' in window) {
     let rt = 0, lastH = portSec.offsetHeight;
     new ResizeObserver(() => {
@@ -755,11 +767,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (Math.abs(h - lastH) < 2) return;
       lastH = h;
       clearTimeout(rt);
-      rt = setTimeout(() => ScrollTrigger.refresh(), 120);
+      rt = setTimeout(safeRefresh, 120);
     }).observe(portSec);
   }
   ['portfolio:view', 'portfolio:filter', 'portfolio:more'].forEach(ev =>
-    document.addEventListener(ev, () => setTimeout(() => ScrollTrigger.refresh(), 150)));
+    document.addEventListener(ev, () => setTimeout(safeRefresh, 150)));
 
   /* ---------- Servicii: cardurile urcă, iconițele se desenează ---------- */
   const svcTrig = { trigger: '.services-flat-grid', start: 'top 85%', once: true };
