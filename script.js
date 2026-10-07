@@ -745,9 +745,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-   /* ---------- Portofoliu: fără fixare; recalculăm pozițiile când se schimbă înălțimea secțiunii ---------- */
+  /* ---------- Portofoliu: când se schimbă înălțimea secțiunii (filtre, grilă, „Vezi mai multe", imagini),
+     recalculăm pozițiile animațiilor de mai jos, ca să nu se suprapună secțiunile ---------- */
+  const portSec = $('#portfolio');
+  if (portSec && 'ResizeObserver' in window) {
+    let rt = 0, lastH = portSec.offsetHeight;
+    new ResizeObserver(() => {
+      const h = portSec.offsetHeight;
+      if (Math.abs(h - lastH) < 2) return;
+      lastH = h;
+      clearTimeout(rt);
+      rt = setTimeout(() => ScrollTrigger.refresh(), 120);
+    }).observe(portSec);
+  }
   ['portfolio:view', 'portfolio:filter', 'portfolio:more'].forEach(ev =>
-    document.addEventListener(ev, () => ScrollTrigger.refresh()));
+    document.addEventListener(ev, () => setTimeout(() => ScrollTrigger.refresh(), 150)));
 
   /* ---------- Servicii: cardurile urcă, iconițele se desenează ---------- */
   const svcTrig = { trigger: '.services-flat-grid', start: 'top 85%', once: true };
