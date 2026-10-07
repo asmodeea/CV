@@ -524,20 +524,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }, true);
     board.addEventListener('dragstart', e => e.preventDefault());
 
-    /* scroll orizontal (trackpad / Shift+rotiță) mișcă planșa; scroll-ul vertical rămâne mereu al paginii */
+      /* Rotița cu mouse-ul deasupra planșei: planșa se mișcă „normal" (rapid), iar pagina e încetinită.
+       Parcurgi planșa treptat și ieși natural din ea, deci nu poți rămâne blocat. */
+    const BOARD_GAIN = 5;   // cât se mișcă planșa la fiecare pixel de rotiță (mai mare = mai repede, mai multe ture)
+    const PAGE_SHARE = 0.3; // cât din rotiță merge în pagină (mai mic = pagina avansează mai încet)
     board.addEventListener('wheel', e => {
-      if (e.ctrlKey || Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+      if (e.ctrlKey || mqReduce.matches || !finePtr.matches) return;
+      let dx = e.deltaX, dy = e.deltaY;
+      if (e.deltaMode === 1) { dx *= 16; dy *= 16; } else if (e.deltaMode === 2) { dx *= window.innerHeight; dy *= window.innerHeight; }
       e.preventDefault();
-      pan(Math.max(-260, Math.min(260, e.deltaX * 1.2)));
+      if (Math.abs(dx) > Math.abs(dy)) { pan(Math.max(-260, Math.min(260, dx * 1.2))); return; }
+      pan(Math.max(-900, Math.min(900, dy * BOARD_GAIN)));
+      window.scrollBy({ top: dy * PAGE_SHARE, behavior: 'instant' });
+      lastSY = window.scrollY; // scroll-ul făcut de noi nu mai împinge planșa a doua oară
     }, { passive: false });
 
-    /* cât timp planșa e pe ecran, derularea paginii o împinge lateral (fără fixare, fără blocaj) */
+    /* când pagina e derulată altfel (bară de scroll, tastatură, deget), planșa e împinsă discret lateral */
     let lastSY = window.scrollY;
     window.addEventListener('scroll', () => {
       const d = window.scrollY - lastSY;
       lastSY = window.scrollY;
       if (!d || !inView || port.dataset.view !== 'board' || mqReduce.matches || Math.abs(d) > 400) return;
-      tgt += d * 1.8;
+      tgt += d * 0.6;
       wake();
     }, { passive: true });
 
