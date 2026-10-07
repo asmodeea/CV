@@ -1,0 +1,31 @@
+# Ana Sărdan — Graphic & Motion Designer (Bucharest, Romania)
+
+> Portfolio and CV of Ana Sărdan, a graphic and motion designer based in Bucharest, Romania, with 10+ years of experience. She designs social media content, banners, print and packaging, video and motion graphics, and web pages (landing pages) for small and medium brands. Available for projects. The site is in Romanian and English.
+> Portofoliul și CV-ul Anei Sărdan, graphic și motion designer din București, cu peste 10 ani de experiență. Realizează conținut pentru social media, bannere, print, ambalaje, video, motion și pagini web pentru branduri mici și medii.
+
+## Pages
+- [Portfolio and CV, Romanian](https://asmodeea.github.io/CV/): selected work (video, social, web, print, 3D and illustration), services, process, experience, skills.
+- [Portfolio and CV, English](https://asmodeea.github.io/CV/index-en.html): the same content in English.
+
+## Downloads
+- [CV, Romanian (PDF)](https://asmodeea.github.io/CV/CV_Ana_Sardan.pdf)
+- [CV, English (PDF)](https://asmodeea.github.io/CV/CV_Ana_Sardan_EN.pdf)
+
+## Services
+- Motion & Video: editing, color grading and animation, from short social teasers to testimonial videos (Premiere Pro, After Effects).
+- Social & Digital: posts, stories, banners and ads with a consistent look; landing pages designed in Figma.
+- Print & Packaging: boxes, catalogs, billboards, flyers, roll-ups; print-ready files.
+- Branding: visual identity built from scratch.
+
+## Experience
+- Go Manj: Graphic Designer, Sep 2022 to present (packaging, social media, video, landing pages in Figma).
+- Dent Estet, dental clinic group: Graphic Designer, Jan 2020 to Sep 2022.
+- TechBubble, toy and gadget store: Graphic Designer and Social Media Manager, Nov 2019 to Oct 2020.
+
+## Optional
+- Earlier roles (2014 to 2019): real estate developer, power tool manufacturer, retail, print shop, mobile games studio. Full list in the CV.
+- Education: Politehnica University of Bucharest, Faculty of Aerospace Engineering (Bachelor's 2013, Master's in Industrial Design and Engineering Graphics 2015).
+- Tools: Adobe Illustrator, Photoshop, After Effects and Premiere Pro (advanced); Figma, InDesign, HTML/CSS, WordPress (intermediate); 3DS Max, Maya, Blender (basic).
+
+## Contact
+Email and phone are not published in plain text, to keep them away from scrapers. On the pages above, press "Show email" / "Show number" (or "Arată emailul" / "Arată numărul") in the Contact section. The CV PDFs also list contact details.

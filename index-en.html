@@ -3,19 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ana Sărdan — Graphic &amp; Motion Designer</title>
-<meta name="description" content="Ana Sărdan — Graphic &amp; Motion Designer in Bucharest. Social media, banners, print, packaging, motion and web design for small and medium brands.">
-<meta name="theme-color" content="#120E18">
+<title>Ana Sărdan — Graphic &amp; Motion Designer, Bucharest | Portfolio</title>
+<meta name="description" content="Portfolio of Ana Sărdan, a graphic and motion designer in Bucharest: social media, banners, print, packaging, video and web design for small and medium brands.">
+<meta name="author" content="Ana Sărdan">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="theme-color" content="#2f2340">
 <meta name="color-scheme" content="dark light">
 <link rel="canonical" href="https://asmodeea.github.io/CV/index-en.html">
-<link rel="alternate" hreflang="ro" href="https://asmodeea.github.io/CV/index.html">
+<link rel="alternate" hreflang="ro" href="https://asmodeea.github.io/CV/">
 <link rel="alternate" hreflang="en" href="https://asmodeea.github.io/CV/index-en.html">
-<link rel="alternate" hreflang="x-default" href="https://asmodeea.github.io/CV/index.html">
-<meta property="og:type" content="website">
+<link rel="alternate" hreflang="x-default" href="https://asmodeea.github.io/CV/">
+<meta property="og:type" content="profile">
+<meta property="og:site_name" content="Ana Sărdan">
 <meta property="og:title" content="Ana Sărdan — Graphic &amp; Motion Designer">
-<meta property="og:description" content="Graphic &amp; Motion Designer in Bucharest. Social media, banners, print, packaging, motion and web design for small and medium brands.">
+<meta property="og:description" content="Portfolio of Ana Sărdan, a graphic and motion designer in Bucharest: social media, banners, print, packaging, video and web design for small and medium brands.">
 <meta property="og:url" content="https://asmodeea.github.io/CV/index-en.html">
 <meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="ro_RO">
+<meta property="og:image" content="https://asmodeea.github.io/CV/images/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Ana Sărdan, graphic and motion designer from Bucharest">
+<meta property="profile:first_name" content="Ana">
+<meta property="profile:last_name" content="Sărdan">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ana Sărdan — Graphic &amp; Motion Designer">
+<meta name="twitter:description" content="Portfolio of Ana Sărdan, a graphic and motion designer in Bucharest: social media, banners, print, packaging, video and web design for small and medium brands.">
+<meta name="twitter:image" content="https://asmodeea.github.io/CV/images/og-image.png">
+<meta name="twitter:image:alt" content="Ana Sărdan, graphic and motion designer from Bucharest">
 <!-- setează tema înainte de prima afișare, ca să nu „clipească" -->
 <script>
 (function(){
@@ -24,21 +40,25 @@
   r.setAttribute('data-theme', t==='light'?'light':'dark');
   r.classList.add('js');
   var m=document.querySelector('meta[name="theme-color"]');
-  if(m) m.setAttribute('content', t==='light'?'#E6DDEB':'#120E18');
+  if(m) m.setAttribute('content', t==='light'?'#E6DDEB':'#2f2340');
+  /* plasă de siguranță: dacă animațiile nu pornesc în 5 s, conținutul se arată oricum */
+  setTimeout(function(){ if(!window.__motion) r.classList.remove('js'); }, 5000);
 })();
 </script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" sizes="32x32" href="images/icon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="images/icon-192.png">
 <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<link rel="preload" href="fonts/archivo-black-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/archivo-black-latin-ext-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="images/portrait.webp" as="image" type="image/webp" fetchpriority="high">
+<link rel="preconnect" href="https://i.ytimg.com">
 <link rel="stylesheet" href="style.css">
-<!-- GSAP + ScrollTrigger (animații la scroll). Dacă nu se încarcă, pagina rămâne complet funcțională, fără animații. -->
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+<!-- GSAP + ScrollTrigger (animații la scroll), găzduite local. Dacă nu se încarcă, pagina rămâne complet funcțională, fără animații. -->
+<script src="vendor/gsap.min.js" defer></script>
+<script src="vendor/ScrollTrigger.min.js" defer></script>
 <script src="script.js" defer></script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Person", "name": "Ana Sărdan", "jobTitle": "Graphic & Motion Designer", "url": "https://asmodeea.github.io/CV/index-en.html", "address": {"@type": "PostalAddress", "addressLocality": "Bucharest", "addressCountry": "RO"}, "knowsAbout": ["Social media design", "Banners", "Print", "Packaging", "Motion design", "Web design", "Branding"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://asmodeea.github.io/CV/#website","url":"https://asmodeea.github.io/CV/","name":"Ana Sărdan — Portfolio","inLanguage":["ro","en"],"publisher":{"@id":"https://asmodeea.github.io/CV/#person"}},{"@type":"ProfilePage","@id":"https://asmodeea.github.io/CV/index-en.html#webpage","url":"https://asmodeea.github.io/CV/index-en.html","name":"Ana Sărdan — Graphic & Motion Designer, Bucharest | Portfolio","description":"Portfolio of Ana Sărdan, a graphic and motion designer in Bucharest: social media, banners, print, packaging, video and web design for small and medium brands.","inLanguage":"en","isPartOf":{"@id":"https://asmodeea.github.io/CV/#website"},"about":{"@id":"https://asmodeea.github.io/CV/#person"},"mainEntity":{"@id":"https://asmodeea.github.io/CV/#person"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://asmodeea.github.io/CV/images/og-image.png","width":1200,"height":630}},{"@type":"Person","@id":"https://asmodeea.github.io/CV/#person","name":"Ana Sărdan","givenName":"Ana","familyName":"Sărdan","jobTitle":"Graphic & Motion Designer","description":"Graphic and motion designer from Bucharest with 10+ years of experience in social media, banners, print, packaging, video and web design.","url":"https://asmodeea.github.io/CV/","image":"https://asmodeea.github.io/CV/images/portrait.webp","address":{"@type":"PostalAddress","addressLocality":"Bucharest","addressCountry":"RO"},"alumniOf":{"@type":"CollegeOrUniversity","name":"Politehnica University of Bucharest"},"worksFor":{"@type":"Organization","name":"Go Manj"},"knowsAbout":["Graphic design","Motion design","Video editing","Social media design","Banners","Print","Packaging","Web design","Landing pages","Branding","Adobe After Effects","Adobe Premiere Pro","Adobe Photoshop","Adobe Illustrator","Figma"],"makesOffer":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Motion & Video","description":"Video editing, color grading and animation, from quick social teasers to patient stories.","areaServed":"RO","provider":{"@id":"https://asmodeea.github.io/CV/#person"}}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Social & Digital","description":"Consistent posts, stories, banners and ads, plus landing pages designed in Figma.","areaServed":"RO","provider":{"@id":"https://asmodeea.github.io/CV/#person"}}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Print & Packaging","description":"Boxes, catalogs, billboards and flyers, with files prepared for the printer.","areaServed":"RO","provider":{"@id":"https://asmodeea.github.io/CV/#person"}}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Branding","description":"Building a brand from scratch: visual identity and materials.","areaServed":"RO","provider":{"@id":"https://asmodeea.github.io/CV/#person"}}}]}]}</script>
 </head>
 <body>
 <a class="skip-link" href="#top">Skip to content</a>
@@ -59,6 +79,7 @@
     </nav>
     <div class="nav-actions">
       <a href="CV_Ana_Sardan_EN.pdf" download="CV_Ana_Sardan_EN.pdf" class="cv-link" aria-label="Download CV (PDF)">CV <span aria-hidden="true">↓</span></a>
+      <button type="button" class="theme-btn motion-btn" id="motionBtn" aria-pressed="false" aria-label="Pause motion"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><g class="ic-pause"><rect x="6" y="5" width="4" height="14" fill="currentColor"/><rect x="14" y="5" width="4" height="14" fill="currentColor"/></g><path class="ic-play" d="M8 5v14l11-7z" fill="currentColor"/></svg></button>
       <button type="button" class="theme-btn" id="themeBtn" aria-label="Switch to light theme" data-label-to-light="Switch to light theme" data-label-to-dark="Switch to dark theme"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor"/></svg></button>
       <a href="index.html" class="lang-btn" hreflang="ro" lang="ro" title="Treci la română" aria-label="Treci la română">RO</a>
     </div>
@@ -67,7 +88,7 @@
   <span class="progress" aria-hidden="true"></span>
 </header>
 
-<main id="top">
+<main id="top" tabindex="-1">
 
   <!-- ============ HERO ============ -->
   <section class="hero">
@@ -91,7 +112,7 @@
         <span class="plate p2" aria-hidden="true"></span>
         <span class="cm tl"></span><span class="cm tr"></span><span class="cm bl"></span><span class="cm br"></span>
         <div class="portrait-img">
-          <img src="images/portrait.webp" width="787" height="682" fetchpriority="high" alt="Portrait of Ana Sărdan, black and white">
+          <img src="images/portrait.webp" width="787" height="682" fetchpriority="high" alt="Portrait of Ana Sărdan, graphic and motion designer, black and white">
         </div>
         <div class="stamp"><span class="big">10+</span><span>years of<br>experience</span></div>
       </div>
@@ -392,8 +413,8 @@ window.ytFb=function(img,loaded){
       <div class="edu-train">
         <div>
           <p class="eyebrow eyebrow--spaced" data-reveal><span class="dot"></span>Education</p>
-          <div class="edu-item" data-reveal><div class="date">OCT 2013 — SEP 2015</div><h4>Politehnica University of Bucharest</h4><p>Faculty of Aerospace Engineering — Industrial Design and Engineering Graphics · Master's</p></div>
-          <div class="edu-item" data-reveal><div class="date">OCT 2008 — SEP 2013</div><h4>Politehnica University of Bucharest</h4><p>Faculty of Aerospace Engineering — Aircraft Equipment and Systems · Bachelor's</p></div>
+          <div class="edu-item" data-reveal><div class="date">OCT 2013 — SEP 2015</div><h3>Politehnica University of Bucharest</h3><p>Faculty of Aerospace Engineering — Industrial Design and Engineering Graphics · Master's</p></div>
+          <div class="edu-item" data-reveal><div class="date">OCT 2008 — SEP 2013</div><h3>Politehnica University of Bucharest</h3><p>Faculty of Aerospace Engineering — Aircraft Equipment and Systems · Bachelor's</p></div>
         </div>
         <div>
           <p class="eyebrow eyebrow--spaced" data-reveal><span class="dot"></span>Courses</p>
@@ -427,6 +448,7 @@ window.ytFb=function(img,loaded){
         <div class="contact-line" data-reveal><span class="k">Status</span><span class="v">Available for projects</span></div>
       </div>
     </div>
+    <noscript><div class="contact-line"><span class="k">Contact</span><span class="v">Turn on JavaScript to see the phone and email, or download the CV: <a href="CV_Ana_Sardan_EN.pdf" download>CV (PDF)</a></span></div></noscript>
   </div>
 </div>
 

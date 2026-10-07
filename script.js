@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------- Temă dark / light ---------- */
   const themeBtn = document.getElementById('themeBtn');
   const metaTheme = document.querySelector('meta[name="theme-color"]');
-  const THEME_COLORS = { dark: '#120E18', light: '#E6DDEB' };
+  const THEME_COLORS = { dark: '#2f2340', light: '#E6DDEB' };
 
   function applyTheme(theme, persist) {
     root.setAttribute('data-theme', theme);
@@ -31,6 +31,21 @@ document.addEventListener('DOMContentLoaded', () => {
       applyTheme(next, true);
       setTimeout(() => root.classList.remove('theme-switching'), 450);
     });
+  }
+
+  /* ---------- Pauză mișcare (WCAG 2.2.2): oprește banda care se mișcă singură și marquee-ul ---------- */
+  const motionBtn = document.getElementById('motionBtn');
+  if (motionBtn) {
+    const setMotion = (paused, persist) => {
+      root.classList.toggle('motion-paused', paused);
+      motionBtn.setAttribute('aria-pressed', String(paused));
+      if (persist) { try { localStorage.setItem('motion', paused ? 'off' : 'on'); } catch (e) { /* ignorăm */ } }
+      document.dispatchEvent(new CustomEvent('motion:toggle'));
+    };
+    let saved = null;
+    try { saved = localStorage.getItem('motion'); } catch (e) { /* ignorăm */ }
+    if (saved === 'off') setMotion(true, false);
+    motionBtn.addEventListener('click', () => setMotion(!root.classList.contains('motion-paused'), true));
   }
 
   /* ---------- Meniu mobil ---------- */
@@ -330,8 +345,8 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------- Grilă: buton „Vezi mai multe" ---------- */
   const gridEl = document.getElementById('sheetGrid');
   if (gridEl) {
-    const step = () => (window.matchMedia('(max-width: 900px)').matches ? 8 : 20);
-   let shown = step();
+    const perPage = () => (window.matchMedia('(max-width: 900px)').matches ? 8 : 20);
+    let shown = perPage();
     const moreWrap = document.createElement('div');
     moreWrap.className = 'grid-more';
     const moreGrid = document.createElement('button');
@@ -348,11 +363,11 @@ document.addEventListener('DOMContentLoaded', () => {
       moreGrid.textContent = (RO ? 'Vezi mai multe' : 'See more') + ' (' + left + ')';
     };
     moreGrid.addEventListener('click', () => {
-      shown += step();
+      shown += perPage();
       applyMore();
       document.dispatchEvent(new CustomEvent('portfolio:more'));
     });
-    document.addEventListener('portfolio:filter', () => { shown = step(); applyMore(); });
+    document.addEventListener('portfolio:filter', () => { shown = perPage(); applyMore(); });
     applyMore();
   }
   /* ---------- Planșa de lucru orizontală, ciclică ----------
@@ -417,7 +432,7 @@ document.addEventListener('DOMContentLoaded', () => {
         g.items.forEach(item => {
           const t = item.cloneNode(true);
           t.dataset.oi = realItems.indexOf(item);
-         t.classList.remove('filtered-out', 'more-hidden');
+          t.classList.remove('filtered-out', 'more-hidden');
           set.appendChild(t);
           lefts.push(x);
           frames.push(parseInt((item.querySelector('.frame-no') || {}).textContent, 10) || 0);
@@ -461,7 +476,7 @@ document.addEventListener('DOMContentLoaded', () => {
       lastT = t;
       const reduce = mqReduce.matches;
       if (!drag) {
-        const auto = !reduce && !pinned && !hovering && !isOpen() && t - lastInteract > 2500;
+        const auto = !reduce && !root.classList.contains('motion-paused') && !pinned && !hovering && !isOpen() && t - lastInteract > 2500;
         if (auto) tgt += 0.014 * dt; // deriva lentă: ~14 px/s
         pos += (tgt - pos) * Math.min(1, dt * 0.012);
         if (Math.abs(tgt - pos) < 0.05) pos = tgt;
@@ -475,6 +490,7 @@ document.addEventListener('DOMContentLoaded', () => {
       raf = requestAnimationFrame(tick);
     }
     const touch = () => { lastInteract = performance.now(); wake(); };
+    document.addEventListener('motion:toggle', touch);
     const pan = d => { tgt += d; touch(); };
 
     if ('IntersectionObserver' in window) {
@@ -524,7 +540,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, true);
     board.addEventListener('dragstart', e => e.preventDefault());
 
-      /* Rotița cu mouse-ul deasupra planșei: planșa se mișcă „normal" (rapid), iar pagina e încetinită.
+    /* Rotița cu mouse-ul deasupra planșei: planșa se mișcă „normal" (rapid), iar pagina e încetinită.
        Parcurgi planșa treptat și ieși natural din ea, deci nu poți rămâne blocat. */
     const BOARD_GAIN = 0.9;   // cât se mișcă planșa la fiecare pixel de rotiță (mai mare = mai repede, mai multe ture)
     const PAGE_SHARE = 0.1; // cât din rotiță merge în pagină (mai mic = pagina avansează mai încet)
@@ -611,7 +627,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.portBoard = {
       nudge: d => pan(d),
       setPinned: v => { pinned = v; wake(); },
-       isBoard: () => port.dataset.view === 'board',
+      isBoard: () => port.dataset.view === 'board',
       period: () => (lanes[0] ? lanes[0].W : 0)
     };
     document.dispatchEvent(new CustomEvent('portboard:ready'));
@@ -633,10 +649,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   gsap.registerPlugin(ScrollTrigger);
+  window.__motion = true; // spune scriptului din <head> că animațiile au pornit
   const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   const $ = (s, c) => (c || document).querySelector(s);
   const $$ = (s, c) => gsap.utils.toArray(s, c);
-   // `scroll-behavior: smooth` din CSS strică măsurătorile ScrollTrigger (mută pagina animat în timpul recalculării):
+  // `scroll-behavior: smooth` din CSS strică măsurătorile ScrollTrigger (mută pagina animat în timpul recalculării):
   // îl oprim doar cât durează fiecare recalculare
   ScrollTrigger.addEventListener('refreshInit', () => { root.style.scrollBehavior = 'auto'; });
   ScrollTrigger.addEventListener('refresh', () => { root.style.scrollBehavior = ''; });
@@ -751,8 +768,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ---------- Portofoliu: când se schimbă înălțimea secțiunii (filtre, grilă, „Vezi mai multe", imagini),
      recalculăm pozițiile animațiilor de mai jos, ca să nu se suprapună secțiunile ---------- */
-    const portSec = $('#portfolio');
-// fără secțiuni fixate, o recalculare simplă e suficientă; o amânăm puțin și o facem o singură dată
+  // fără secțiuni fixate, o recalculare simplă e suficientă; o amânăm puțin și o facem o singură dată
   let rfT = 0;
   const safeRefresh = () => { clearTimeout(rfT); rfT = setTimeout(() => ScrollTrigger.refresh(), 100); };
   if ('ResizeObserver' in window) {
@@ -783,8 +799,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (section && pin && steps.length) {
     const mm = gsap.matchMedia();
 
-    // desktop: secțiunea rămâne fixată, fiecare pas completează foaia
-       mm.add('(min-width: 901px)', () => {
+    // desktop: foaia de probă stă lipită sus (sticky), iar pașii o completează pe măsură ce derulezi
+    mm.add('(min-width: 901px)', () => {
       const N = steps.length;
       const setActive = idx => steps.forEach((s, i) => {
         s.classList.toggle('is-active', i === idx);
@@ -808,7 +824,6 @@ document.addEventListener('DOMContentLoaded', () => {
         .fromTo('.proc-stamp', { scale: 2.6, opacity: 0, rotation: -32 }, { scale: 1, opacity: 1, rotation: -8, duration: 0.45, ease: 'power4.in' }, 4.15);
 
       return () => { section.classList.remove('is-pinned'); steps.forEach(s => s.classList.remove('is-active', 'is-done')); };
-   
     });
 
     // mobil: fără pin, elementele apar simplu când ajung în ecran
@@ -830,7 +845,6 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------- Despre: statement cuvânt cu cuvânt, poză, iconițe ---------- */
   const statement = $('#statement');
   if (statement) {
-    statement.setAttribute('aria-label', statement.textContent.replace(/\s+/g, ' ').trim());
     const wrapWords = node => {
       Array.from(node.childNodes).forEach(n => {
         if (n.nodeType === 3) {
@@ -840,7 +854,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(' ')); return; }
             const w = document.createElement('span');
             w.className = 'sw';
-            w.setAttribute('aria-hidden', 'true');
             w.textContent = part;
             frag.appendChild(w);
           });
@@ -851,8 +864,8 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     };
     wrapWords(statement);
-    gsap.fromTo($$('.sw', statement), { opacity: 0.15 }, {
-      opacity: 1, ease: 'none', stagger: 0.12,
+    gsap.fromTo($$('.sw', statement), { '--k': 0 }, {
+      '--k': 1, ease: 'none', stagger: 0.12,
       scrollTrigger: { trigger: statement, start: 'top 82%', end: 'bottom 48%', scrub: true }
     });
   }
